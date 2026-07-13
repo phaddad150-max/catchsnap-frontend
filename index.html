@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CatchSnap AI • LegalBite Greece</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CatchSnap Greece</title>
+  <meta name="description" content="An intelligent, location-aware assistant providing instant legal insights and regulatory guidance for recreational fishing in Greece.">
   <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  <meta name="theme-color" content="#2563eb">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -12,11 +15,11 @@
         extend: {
           colors: {
             brand: {
-              DEFAULT: '#3779EC',
-              dark: '#2856C7',
-              darker: '#1E4A9E',
-              light: '#E8F1FE',
-              muted: '#5B93EF',
+              DEFAULT: '#2563eb',
+              dark: '#1d4ed8',
+              darker: '#1e40af',
+              light: '#eff6ff',
+              muted: '#3b82f6',
             }
           }
         }
@@ -30,272 +33,244 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-zinc-950 text-zinc-200 py-8">
+<body class="bg-slate-100 text-zinc-900">
 
-  <!-- Header -->
-  <div class="max-w-2xl mx-auto px-6 mb-6">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-x-3">
-        <img src="assets/logo.png" alt="CatchSnap" class="brand-logo-lg rounded-2xl">
-        <div>
-          <h1 class="text-3xl font-semibold tracking-tighter">LegalBite</h1>
-          <p class="text-xs text-zinc-400 -mt-1">Greece • Prototype</p>
+  <div class="app-shell">
+    <!-- App Header -->
+    <header class="sticky top-0 z-30 bg-white border-b px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="assets/logo.png" alt="CatchSnap" class="brand-logo rounded-xl">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-xl tracking-tight truncate">CatchSnap</span>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-brand-light text-brand-dark rounded-full shrink-0">AI</span>
+          </div>
+          <p class="text-[11px] text-zinc-500 truncate">Greece • Legal Fishing</p>
         </div>
       </div>
-      <div class="px-4 py-1.5 bg-zinc-900 rounded-3xl flex items-center gap-x-2 text-sm">
-        <div class="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
-        <span class="font-medium">Beta v1.4 • Popup + Details</span>
-      </div>
-    </div>
+    </header>
+
+    <main class="main-scroll px-4 pt-4" id="main-content">
+
+      <!-- CATCHSNAP: Upload -->
+      <section id="step-upload">
+        <div class="text-center mb-5">
+          <div class="mx-auto w-14 h-14 bg-brand-light rounded-2xl flex items-center justify-center mb-3">
+            <i class="fa-solid fa-camera text-brand text-2xl"></i>
+          </div>
+          <h2 class="text-xl font-semibold tracking-tight">Identify Your Catch</h2>
+          <p class="text-sm text-zinc-500 mt-1 max-w-xs mx-auto">Snap a photo for instant AI species ID, legal check &amp; nutrition insights</p>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-[11px] font-semibold text-zinc-400 mb-2 px-0.5">TRY AN EXAMPLE CATCH</p>
+          <div class="example-grid" id="example-fish-grid"></div>
+        </div>
+
+        <div class="border border-dashed border-zinc-300 rounded-2xl p-5 text-center mb-2">
+          <input type="file" id="real-upload" accept="image/*" class="hidden">
+          <button type="button" id="upload-trigger" class="w-full flex flex-col items-center justify-center gap-y-1.5 text-sm">
+            <i class="fa-solid fa-upload text-xl text-zinc-400"></i>
+            <span class="font-medium text-brand-dark">Upload your own photo</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Analyzing -->
+      <section id="step-analyzing" class="hidden text-center py-12">
+        <div class="mx-auto w-16 h-16 border-4 border-brand-light border-t-brand rounded-full animate-spin mb-5"></div>
+        <h3 class="font-semibold text-lg">Analyzing your catch...</h3>
+        <p class="text-sm text-zinc-500 mt-1">Identifying species • Checking size limits • Calculating nutrition</p>
+      </section>
+
+      <!-- Results -->
+      <section id="step-results" class="hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <div id="result-fish-image" class="w-20 h-20 rounded-2xl overflow-hidden border flex-shrink-0 bg-zinc-100"></div>
+          <div class="flex-1 min-w-0">
+            <div id="result-species" class="font-semibold text-xl tracking-tight leading-tight"></div>
+            <div id="result-confidence" class="text-brand text-sm font-medium flex items-center gap-x-1 mt-0.5"></div>
+            <div id="result-location" class="text-xs text-zinc-500 mt-1"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="bg-zinc-50 rounded-2xl p-3.5">
+            <div class="text-[10px] text-zinc-500 font-medium">ESTIMATED SIZE</div>
+            <div id="result-length" class="text-2xl font-semibold tabular-nums text-brand-dark"></div>
+          </div>
+          <div class="bg-zinc-50 rounded-2xl p-3.5">
+            <div class="text-[10px] text-zinc-500 font-medium">LEGAL STATUS</div>
+            <div id="result-legal-status" class="mt-1"></div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="section-header mb-2">Nutritional Benefits</div>
+          <div id="result-nutrition" class="text-sm bg-white border border-zinc-100 rounded-2xl p-3.5 space-y-2 text-zinc-700"></div>
+        </div>
+
+        <div class="mb-5">
+          <div class="section-header mb-2">Sustainability &amp; Impact</div>
+          <div class="bg-brand-light border border-blue-100 rounded-2xl p-3.5">
+            <div class="text-sm font-medium">Eco-Score</div>
+            <div id="result-eco" class="text-3xl font-semibold text-brand-dark tabular-nums"></div>
+          </div>
+        </div>
+
+        <div class="space-y-2.5">
+          <button type="button" id="btn-add-journal" class="w-full py-3.5 bg-brand hover:bg-brand-dark transition-colors text-white font-semibold rounded-2xl flex items-center justify-center gap-x-2">
+            <i class="fa-solid fa-book"></i>
+            <span>Add to My Journal</span>
+          </button>
+          <button type="button" id="btn-share" class="w-full py-3.5 border border-brand text-brand-dark hover:bg-brand-light transition-colors font-semibold rounded-2xl flex items-center justify-center gap-x-2">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>Share Your Catch</span>
+          </button>
+          <button type="button" id="btn-compliance" class="w-full py-3.5 border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-colors font-medium rounded-2xl flex items-center justify-center gap-x-2 text-sm">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Reporting Guidance</span>
+          </button>
+          <button type="button" id="btn-reset" class="w-full py-2.5 text-zinc-400 text-sm">Snap another catch</button>
+        </div>
+      </section>
+
+      <!-- MAP -->
+      <section id="step-map" class="hidden">
+        <div class="mb-3">
+          <div class="font-semibold text-lg">Fishing Map</div>
+          <div class="text-xs text-zinc-500">Tap a marker to explore spots</div>
+        </div>
+
+        <input type="text" id="map-search" placeholder="Search spots (Aegean, Crete, Attica...)"
+          class="w-full mb-2.5 px-3.5 py-2.5 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:border-brand bg-white">
+
+        <div class="flex gap-2 mb-2.5">
+          <button type="button" id="filter-all" class="filter-pill active">All Spots</button>
+          <button type="button" id="filter-legal" class="filter-pill">Legal only</button>
+        </div>
+
+        <div class="flex justify-between text-[11px] px-0.5 mb-2 text-zinc-500">
+          <div><span id="protected-count">0</span> Protected</div>
+          <div><span id="legal-count">0</span> Legal Spots</div>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden border border-zinc-200 mb-2.5 relative z-0">
+          <div id="map"></div>
+        </div>
+
+        <button type="button" id="btn-near-me" class="w-full py-2.5 bg-brand hover:bg-brand-dark text-white rounded-xl text-sm flex items-center justify-center gap-x-2 font-medium mb-2">
+          <i class="fa-solid fa-location-arrow"></i>
+          <span>Near Me (50km)</span>
+        </button>
+        <p class="text-[10px] text-zinc-400 text-center">Data: ProtectedSeas Navigator Greece</p>
+      </section>
+
+      <!-- LEGAL GUIDE -->
+      <section id="step-legal" class="hidden">
+        <div class="mb-4">
+          <div class="font-semibold text-lg">Legal Guide</div>
+          <div class="text-xs text-zinc-500">Greek recreational fishing regulations</div>
+        </div>
+        <div class="space-y-4 text-sm">
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-900 text-sm">
+            <strong>Important:</strong> Recreational sea fishers in Greece must register and report certain catches via the official national digital system.
+          </div>
+          <div>
+            <div class="font-semibold mb-2">Why report?</div>
+            <ul class="space-y-1.5 text-xs text-zinc-600">
+              <li class="flex gap-2"><i class="fa-solid fa-circle text-[4px] text-brand mt-1.5"></i> Helps scientists manage fish stocks sustainably</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle text-[4px] text-brand mt-1.5"></i> Protects endangered and overfished species</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle text-[4px] text-brand mt-1.5"></i> Avoids potential fines and legal issues</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-semibold mb-2">How to report</div>
+            <ol class="list-decimal pl-5 space-y-1 text-xs text-zinc-600">
+              <li>Go to the official national recreational fishing portal</li>
+              <li>Complete digital registration (free, annual)</li>
+              <li>Log catches electronically — same day for many species</li>
+            </ol>
+          </div>
+          <button type="button" id="btn-open-portal" class="w-full py-3.5 bg-brand hover:bg-brand-dark text-white rounded-2xl font-semibold text-sm flex items-center justify-center gap-x-2">
+            <span>Open Official Portal</span>
+            <i class="fa-solid fa-external-link-alt"></i>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg border-t bg-white px-1 py-2 flex">
+      <button type="button" id="nav-map" data-nav="map" class="nav-btn">
+        <i class="fa-solid fa-map text-base"></i>
+        <span class="text-[10px]">Map</span>
+      </button>
+      <button type="button" id="nav-catchsnap" data-nav="catchsnap" class="nav-btn active">
+        <i class="fa-solid fa-camera text-base"></i>
+        <span class="text-[10px] font-medium">CatchSnap</span>
+      </button>
+      <button type="button" id="nav-journal" data-nav="journal" class="nav-btn">
+        <i class="fa-solid fa-book text-base"></i>
+        <span class="text-[10px]">Journal</span>
+      </button>
+      <button type="button" id="nav-legal" data-nav="legal" class="nav-btn">
+        <i class="fa-solid fa-shield-halved text-base"></i>
+        <span class="text-[10px]">Legal</span>
+      </button>
+    </nav>
   </div>
 
-  <!-- Phone Container -->
-  <div class="max-w-[420px] mx-auto px-4">
-    <div class="phone-frame mx-auto">
-      <div class="app-container bg-white text-zinc-900 overflow-hidden shadow-inner">
-
-        <!-- Status Bar -->
-        <div class="bg-zinc-900 h-9 flex items-center justify-between px-6 text-white text-xs">
-          <div class="font-mono">9:41</div>
-          <div class="flex items-center gap-x-1.5">
-            <i class="fa-solid fa-signal"></i>
-            <i class="fa-solid fa-wifi"></i>
-            <span class="font-mono">92%</span>
-          </div>
-        </div>
-
-        <!-- App Header -->
-        <div class="px-5 pt-5 pb-3 border-b flex items-center justify-between bg-white">
-          <div>
-            <div class="flex items-center gap-x-2">
-              <img src="assets/logo.png" alt="" class="brand-logo rounded-xl" aria-hidden="true">
-              <span class="font-semibold text-2xl tracking-tighter">CatchSnap</span>
-              <span class="px-2 py-0.5 text-[10px] font-bold bg-brand-light text-brand-dark rounded-full">AI</span>
-            </div>
-            <p class="text-xs text-zinc-500">Snap • Analyze • Log legally • Find spots</p>
-          </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="p-5 pb-28 overflow-y-auto" id="main-content" style="max-height: calc(100vh - 12rem);">
-
-          <!-- CATCHSNAP: Upload -->
-          <div id="step-upload">
-            <div class="text-center mb-6">
-              <div class="mx-auto w-16 h-16 bg-brand-light rounded-3xl flex items-center justify-center mb-4">
-                <i class="fa-solid fa-camera text-brand text-4xl"></i>
-              </div>
-              <h2 class="text-2xl font-semibold tracking-tight">CatchSnap AI</h2>
-              <p class="text-sm text-zinc-600 mt-1 max-w-[260px] mx-auto">Take a photo of your catch. Get instant species ID, nutrition insights &amp; legal guidance.</p>
-            </div>
-
-            <div class="mb-4">
-              <p class="text-xs font-semibold text-zinc-500 mb-2 px-1">TRY AN EXAMPLE CATCH</p>
-              <div class="grid grid-cols-3 gap-3" id="example-fish-grid">
-                <button type="button" data-example-index="0" class="fish-card cursor-pointer bg-white border border-zinc-200 rounded-3xl p-2 text-center hover:border-brand">
-                  <div class="aspect-square bg-zinc-100 rounded-2xl mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=300&fit=crop" class="w-full h-full object-cover" alt="Gilthead Sea Bream">
-                  </div>
-                  <div class="text-xs font-semibold">Gilthead Sea Bream</div>
-                </button>
-                <button type="button" data-example-index="1" class="fish-card cursor-pointer bg-white border border-zinc-200 rounded-3xl p-2 text-center hover:border-brand">
-                  <div class="aspect-square bg-zinc-100 rounded-2xl mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=300&h=300&fit=crop" class="w-full h-full object-cover" alt="European Sea Bass">
-                  </div>
-                  <div class="text-xs font-semibold">European Sea Bass</div>
-                </button>
-                <button type="button" data-example-index="2" class="fish-card cursor-pointer bg-white border border-zinc-200 rounded-3xl p-2 text-center hover:border-brand">
-                  <div class="aspect-square bg-zinc-100 rounded-2xl mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=300&h=300&fit=crop" class="w-full h-full object-cover" alt="Common Octopus">
-                  </div>
-                  <div class="text-xs font-semibold">Common Octopus</div>
-                </button>
-              </div>
-            </div>
-
-            <div class="border border-dashed border-zinc-300 rounded-3xl p-6 text-center">
-              <input type="file" id="real-upload" accept="image/*" class="hidden">
-              <button type="button" id="upload-trigger" class="w-full flex flex-col items-center justify-center gap-y-2 text-sm">
-                <i class="fa-solid fa-upload text-2xl text-zinc-400"></i>
-                <span class="font-medium text-brand-dark">Upload your own photo</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Analyzing -->
-          <div id="step-analyzing" class="hidden text-center py-8">
-            <div class="mx-auto w-20 h-20 border-4 border-brand-light border-t-brand rounded-full animate-spin mb-6"></div>
-            <h3 class="font-semibold text-xl">Analyzing your catch...</h3>
-            <p class="text-sm text-zinc-600 mt-1">Identifying species • Checking size limits • Calculating nutrition</p>
-          </div>
-
-          <!-- Results -->
-          <div id="step-results" class="hidden">
-            <div class="flex items-center gap-x-3 mb-4">
-              <div id="result-fish-image" class="w-20 h-20 rounded-2xl overflow-hidden border flex-shrink-0"></div>
-              <div class="flex-1 min-w-0">
-                <div id="result-species" class="font-semibold text-2xl tracking-tight leading-none"></div>
-                <div id="result-confidence" class="text-brand text-sm font-medium flex items-center gap-x-1 mt-0.5"></div>
-                <div id="result-location" class="text-xs text-zinc-500 mt-1"></div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mb-5">
-              <div class="bg-zinc-50 rounded-2xl p-4">
-                <div class="text-xs text-zinc-500">ESTIMATED LENGTH</div>
-                <div id="result-length" class="text-3xl font-semibold tabular-nums text-brand-dark"></div>
-              </div>
-              <div class="bg-zinc-50 rounded-2xl p-4">
-                <div class="text-xs text-zinc-500">LEGAL STATUS</div>
-                <div id="result-legal-status" class="mt-1"></div>
-              </div>
-            </div>
-
-            <div class="mb-5">
-              <div class="section-header mb-2 px-1">Nutritional Benefits</div>
-              <div id="result-nutrition" class="text-sm bg-white border border-zinc-100 rounded-2xl p-4 space-y-2 text-zinc-700"></div>
-            </div>
-
-            <div class="mb-6">
-              <div class="section-header mb-2 px-1">Sustainability &amp; Impact</div>
-              <div class="bg-brand-light border border-brand-light rounded-2xl p-4">
-                <div class="font-medium">Eco-Score</div>
-                <div id="result-eco" class="text-4xl font-semibold text-brand-dark tabular-nums"></div>
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <button type="button" id="btn-add-journal" class="w-full py-4 bg-brand hover:bg-brand-dark transition-colors text-white font-semibold rounded-3xl flex items-center justify-center gap-x-2">
-                <i class="fa-solid fa-book"></i>
-                <span>Add to My Journal</span>
-              </button>
-              <button type="button" id="btn-compliance" class="w-full py-4 border border-brand text-brand-dark hover:bg-brand-light transition-colors font-semibold rounded-3xl flex items-center justify-center gap-x-2">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>Get National Reporting Guidance</span>
-              </button>
-              <button type="button" id="btn-reset" class="w-full py-3 text-zinc-500 text-sm">Snap another catch</button>
-            </div>
-          </div>
-
-          <!-- MAP SECTION -->
-          <div id="step-map" class="hidden">
-            <div class="flex items-center justify-between mb-3">
-              <div>
-                <div class="font-semibold text-xl">Legal Fishing Map</div>
-                <div class="text-xs text-zinc-500">Protected areas + Legal shore spots • Greece</div>
-              </div>
-            </div>
-
-            <input type="text" id="map-search" placeholder="Search spots (Aegina, Nafplio, Faliron...)"
-              class="w-full mb-2 px-4 py-2 border border-zinc-300 rounded-2xl text-sm focus:outline-none focus:border-brand">
-
-            <div class="flex justify-between text-xs px-1 mb-2 text-zinc-500">
-              <div><span id="protected-count">0</span> Protected Areas</div>
-              <div><span id="legal-count">0</span> Legal Fishing Spots</div>
-            </div>
-
-            <div class="rounded-2xl overflow-hidden border border-zinc-200 mb-3">
-              <div id="map"></div>
-            </div>
-
-            <div class="flex items-center justify-between text-xs px-1">
-              <label class="flex items-center cursor-pointer">
-                <input type="checkbox" id="legal-only-toggle" class="mr-1.5 accent-brand">
-                <span>Legal Only</span>
-              </label>
-              <button type="button" id="btn-near-me" class="px-3 py-1 bg-brand hover:bg-brand-dark text-white rounded-2xl text-xs flex items-center gap-x-1 font-medium">
-                <i class="fa-solid fa-location-arrow"></i>
-                <span>Near Me (50km)</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav absolute bottom-0 left-0 right-0 border-t bg-white px-2 py-3 flex justify-around text-xs" style="border-radius: 0 0 2.25rem 2.25rem;">
-          <button type="button" id="nav-map" data-nav="map" class="nav-btn">
-            <i class="fa-solid fa-map text-lg"></i>
-            <span class="mt-0.5 text-[10px] font-medium">Map</span>
-          </button>
-          <button type="button" id="nav-catchsnap" data-nav="catchsnap" class="nav-btn active">
-            <i class="fa-solid fa-camera text-lg"></i>
-            <span class="mt-0.5 text-[10px] font-medium">CatchSnap</span>
-          </button>
-          <button type="button" id="nav-journal" data-nav="journal" class="nav-btn">
-            <i class="fa-solid fa-book text-lg"></i>
-            <span class="mt-0.5 text-[10px]">Journal</span>
-          </button>
-          <button type="button" id="nav-legal" data-nav="legal" class="nav-btn">
-            <i class="fa-solid fa-shield-halved text-lg"></i>
-            <span class="mt-0.5 text-[10px]">Legal</span>
-          </button>
-        </nav>
-
+  <!-- Share Modal -->
+  <div id="share-modal" class="hidden fixed inset-0 z-[60] flex items-end justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="share-backdrop"></div>
+    <div class="relative w-full max-w-lg bg-white rounded-t-[2rem] shadow-2xl p-5 pb-8 z-10">
+      <div class="flex justify-center mb-3"><div class="w-10 h-1 bg-zinc-200 rounded-full"></div></div>
+      <h3 class="font-semibold text-lg text-center mb-1">Share Your Catch</h3>
+      <p class="text-xs text-zinc-500 text-center mb-4">Spread the word about sustainable fishing in Greece</p>
+      <div id="share-preview" class="bg-zinc-50 rounded-xl p-3 text-xs text-zinc-600 mb-4 whitespace-pre-wrap"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" id="share-copy" class="py-3 bg-brand text-white rounded-xl text-sm font-medium">Copy Caption</button>
+        <button type="button" id="share-native" class="py-3 border border-zinc-200 rounded-xl text-sm font-medium">Share...</button>
+        <button type="button" id="share-twitter" class="py-3 border border-zinc-200 rounded-xl text-sm font-medium col-span-2">Post on X</button>
       </div>
+      <button type="button" id="share-close" class="w-full mt-3 py-2 text-zinc-400 text-sm">Close</button>
     </div>
   </div>
 
   <!-- Compliance Modal -->
-  <div id="compliance-modal" class="hidden fixed inset-0 bg-black/60 items-end justify-center z-50">
-    <div class="bg-white w-full max-w-[420px] rounded-t-3xl p-6">
-      <div class="flex justify-between items-center mb-5">
+  <div id="compliance-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end justify-center">
+    <div class="bg-white w-full max-w-lg rounded-t-3xl p-5 pb-8">
+      <div class="flex justify-between items-center mb-4">
         <div>
-          <div class="font-semibold text-xl">Stay Legal in Greece</div>
+          <div class="font-semibold text-lg">Reporting Guidance</div>
           <div class="text-xs text-brand">Mandatory since 2026</div>
         </div>
-        <button type="button" id="compliance-close" class="text-3xl text-zinc-400 hover:text-zinc-600">×</button>
+        <button type="button" id="compliance-close" class="text-2xl text-zinc-400 leading-none px-2">×</button>
       </div>
-      <div id="compliance-body" class="space-y-5 text-sm">
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-800">
-          <strong>Important:</strong> Recreational sea fishers in Greece must register and report certain catches via the official national digital system.
-        </div>
-        <div>
-          <div class="font-medium mb-2">Why report?</div>
-          <ul class="space-y-1 text-xs text-zinc-600 pl-1">
-            <li class="flex gap-x-2"><span class="text-brand">•</span> Helps scientists manage fish stocks</li>
-            <li class="flex gap-x-2"><span class="text-brand">•</span> Protects species like the one you just caught</li>
-            <li class="flex gap-x-2"><span class="text-brand">•</span> Avoids potential fines</li>
-          </ul>
-        </div>
-        <div>
-          <div class="font-medium mb-2">How to report (official steps):</div>
-          <ol class="list-decimal pl-5 space-y-1 text-xs text-zinc-600">
-            <li>Go to the official national recreational fishing portal or app.</li>
-            <li>Complete digital registration (free, annual).</li>
-            <li>Report your catch electronically — same day for many species.</li>
-          </ol>
-        </div>
-        <div class="pt-2">
-          <button type="button" id="btn-national-report" class="w-full py-3.5 bg-brand hover:bg-brand-dark text-white rounded-3xl font-semibold text-sm flex items-center justify-center gap-x-2">
-            <span>Open Official Guidance</span>
-            <i class="fa-solid fa-external-link-alt"></i>
-          </button>
-          <p class="text-center text-[10px] text-zinc-500 mt-2">This app guides you — it does not replace the official system.</p>
-        </div>
-      </div>
+      <p class="text-sm text-zinc-600 mb-4">Report your recreational catch through the official Hellenic Coast Guard digital portal.</p>
+      <button type="button" id="btn-national-report" class="w-full py-3.5 bg-brand hover:bg-brand-dark text-white rounded-2xl font-semibold text-sm">Open Official Portal</button>
     </div>
   </div>
 
-  <!-- Spot Details Modal (Option B) -->
-  <div id="spot-details-modal" class="hidden fixed inset-0 bg-black/60 items-end justify-center z-50">
-    <div class="bg-white w-full max-w-[420px] rounded-t-3xl p-6 max-h-[85vh] overflow-auto">
-      <div class="flex justify-between items-center mb-4">
+  <!-- Spot Details Modal -->
+  <div id="spot-details-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end justify-center">
+    <div class="bg-white w-full max-w-lg rounded-t-3xl p-5 pb-6 max-h-[85vh] overflow-auto">
+      <div class="flex justify-between items-center mb-3">
         <div>
-          <div id="spot-modal-name" class="font-semibold text-xl"></div>
+          <div id="spot-modal-name" class="font-semibold text-lg"></div>
           <div id="spot-modal-region" class="text-xs text-zinc-500"></div>
         </div>
-        <button type="button" id="spot-modal-close" class="text-3xl text-zinc-400 hover:text-zinc-600">×</button>
+        <button type="button" id="spot-modal-close" class="text-2xl text-zinc-400 leading-none px-2">×</button>
       </div>
       <div id="spot-modal-content"></div>
-      <div class="mt-6 flex gap-3">
-        <button type="button" id="btn-log-catch-spot" class="flex-1 py-3 bg-brand hover:bg-brand-dark text-white rounded-3xl font-semibold text-sm flex items-center justify-center gap-x-2">
-          <i class="fa-solid fa-camera"></i>
-          <span>Log Catch Here</span>
+      <div class="mt-5 flex gap-2">
+        <button type="button" id="btn-log-catch-spot" class="flex-1 py-3 bg-brand hover:bg-brand-dark text-white rounded-2xl font-semibold text-sm">
+          <i class="fa-solid fa-camera mr-1"></i> Log Catch Here
         </button>
-        <button type="button" id="btn-directions-spot" class="flex-1 py-3 border border-zinc-300 hover:bg-zinc-50 rounded-3xl font-semibold text-sm flex items-center justify-center gap-x-2">
-          <i class="fa-solid fa-directions"></i>
-          <span>Get Directions</span>
+        <button type="button" id="btn-directions-spot" class="flex-1 py-3 border border-zinc-200 rounded-2xl font-semibold text-sm">
+          <i class="fa-solid fa-directions mr-1"></i> Directions
         </button>
       </div>
     </div>

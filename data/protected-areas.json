@@ -1,0 +1,290 @@
+[
+  {
+    "name": "Gyaros Marine Wildlife Refuge",
+    "lat": 37.62,
+    "lng": 24.72,
+    "protection_level": "Most Restrictive",
+    "region": "South Aegean",
+    "note": "No fishing of any kind permitted. Highly protected no-take zone."
+  },
+  {
+    "name": "Gyaros Marine Wildlife Refuge Zone Th3",
+    "lat": 37.6,
+    "lng": 24.7,
+    "protection_level": "Most Restrictive",
+    "region": "South Aegean",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Gyaros Marine Wildlife Refuge Zone Th2",
+    "lat": 37.58,
+    "lng": 24.68,
+    "protection_level": "Most Restrictive",
+    "region": "South Aegean",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Gyaros Marine Wildlife Refuge Zone Th1",
+    "lat": 37.56,
+    "lng": 24.66,
+    "protection_level": "Most Restrictive",
+    "region": "South Aegean",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Alonnisos Marine Park (Northern Sporades)",
+    "lat": 39.15,
+    "lng": 23.85,
+    "protection_level": "Most Restrictive",
+    "region": "Thessaly",
+    "note": "Highly protected — no fishing permitted in core zone."
+  },
+  {
+    "name": "Limni Vistonida - Lagous Dimou Avdiron",
+    "lat": 41.04,
+    "lng": 25.15,
+    "protection_level": "Most Restrictive",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Highly protected wetland area — no fishing."
+  },
+  {
+    "name": "Evros Delta Wildlife Refuge",
+    "lat": 40.86,
+    "lng": 26.03,
+    "protection_level": "Most Restrictive",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Evros Delta Wetlands",
+    "lat": 40.84,
+    "lng": 26.05,
+    "protection_level": "Most Restrictive",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Highly protected wetlands — no fishing."
+  },
+  {
+    "name": "Kompsatou Dimou Iasmou",
+    "lat": 41.1,
+    "lng": 25.4,
+    "protection_level": "Most Restrictive",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Nestos Delta and Vistonida-Ismarida Lakes",
+    "lat": 41,
+    "lng": 24.8,
+    "protection_level": "Most Restrictive",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Delta Axiou (Chalastras)",
+    "lat": 40.52,
+    "lng": 22.7,
+    "protection_level": "Most Restrictive",
+    "region": "Central Macedonia",
+    "note": "Highly protected delta — no fishing."
+  },
+  {
+    "name": "Axios - Loudias - Aliakmonas Delta",
+    "lat": 40.48,
+    "lng": 22.6,
+    "protection_level": "Most Restrictive",
+    "region": "Central Macedonia",
+    "note": "Highly protected — no fishing."
+  },
+  {
+    "name": "Zakynthos Marine National Park",
+    "lat": 37.78,
+    "lng": 20.85,
+    "protection_level": "Most Restrictive",
+    "region": "Ionian Islands",
+    "note": "Strictly protected — nesting loggerhead turtles. Heavy fines apply."
+  },
+  {
+    "name": "Strofades Islands Wildlife Refuge",
+    "lat": 37.25,
+    "lng": 21,
+    "protection_level": "Most Restrictive",
+    "region": "Ionian Islands",
+    "note": "Highly protected island refuge — no fishing."
+  },
+  {
+    "name": "Samaria Gorge Lagoon Protected Zone",
+    "lat": 35.28,
+    "lng": 23.98,
+    "protection_level": "Most Restrictive",
+    "region": "Crete",
+    "note": "Coastal protected zone — no fishing."
+  },
+  {
+    "name": "Vai Palm Beach Marine Zone",
+    "lat": 35.25,
+    "lng": 26.26,
+    "protection_level": "Most Restrictive",
+    "region": "Crete",
+    "note": "Protected coastal strip — no fishing."
+  },
+  {
+    "name": "Schinias National Park Marine Zone",
+    "lat": 38.14,
+    "lng": 24.02,
+    "protection_level": "Most Restrictive",
+    "region": "Attica",
+    "note": "Protected wetland and coastal area — no fishing in core zone."
+  },
+  {
+    "name": "Lesvos Northeast Marine Reserve",
+    "lat": 39.32,
+    "lng": 26.55,
+    "protection_level": "Highly Protected",
+    "region": "North Aegean",
+    "note": "Restricted fishing — check local authority for permits."
+  },
+  {
+    "name": "Chios Volissos Protected Coast",
+    "lat": 38.49,
+    "lng": 25.89,
+    "protection_level": "Highly Protected",
+    "region": "North Aegean",
+    "note": "Highly protected coastal area — limited fishing allowed."
+  },
+  {
+    "name": "Samos Marine Protected Zone",
+    "lat": 37.76,
+    "lng": 26.98,
+    "protection_level": "Highly Protected",
+    "region": "North Aegean",
+    "note": "Restricted fishing — check local rules."
+  },
+  {
+    "name": "Rhodos Northeast Marine Corridor",
+    "lat": 36.44,
+    "lng": 28.22,
+    "protection_level": "Highly Protected",
+    "region": "South Aegean",
+    "note": "Highly protected — limited commercial fishing only."
+  },
+  {
+    "name": "Karpathos - Saria Marine Protected Area",
+    "lat": 35.85,
+    "lng": 27.15,
+    "protection_level": "Highly Protected",
+    "region": "South Aegean",
+    "note": "Highly protected — recreational fishing heavily restricted."
+  },
+  {
+    "name": "Milos Marine Reserve",
+    "lat": 36.7,
+    "lng": 24.43,
+    "protection_level": "Highly Protected",
+    "region": "South Aegean",
+    "note": "Highly protected volcanic marine reserve — no recreational fishing."
+  },
+  {
+    "name": "Santorini Caldera Marine Zone",
+    "lat": 36.4,
+    "lng": 25.42,
+    "protection_level": "Highly Protected",
+    "region": "South Aegean",
+    "note": "Protected caldera — fishing restricted. Check local permits."
+  },
+  {
+    "name": "Naxos Marine Protected Area",
+    "lat": 37.05,
+    "lng": 25.51,
+    "protection_level": "Highly Protected",
+    "region": "South Aegean",
+    "note": "Highly protected coastal zone — limited fishing allowed."
+  },
+  {
+    "name": "Pylos Lagoon - Gialova Wetland",
+    "lat": 36.97,
+    "lng": 21.66,
+    "protection_level": "Highly Protected",
+    "region": "Peloponnese",
+    "note": "Important wetland — fishing heavily restricted."
+  },
+  {
+    "name": "Cape Tainaron Protected Marine Zone",
+    "lat": 36.38,
+    "lng": 22.48,
+    "protection_level": "Highly Protected",
+    "region": "Peloponnese",
+    "note": "Highly protected cape zone — check local regulations."
+  },
+  {
+    "name": "Korinthiakos Gulf North Shore MPA",
+    "lat": 38.1,
+    "lng": 22.7,
+    "protection_level": "Highly Protected",
+    "region": "Peloponnese",
+    "note": "Restricted fishing zone — permit required."
+  },
+  {
+    "name": "Ambracian Gulf MPA",
+    "lat": 39.02,
+    "lng": 20.95,
+    "protection_level": "Highly Protected",
+    "region": "Epirus",
+    "note": "Enclosed semi-protected gulf — special fishing rules apply."
+  },
+  {
+    "name": "Kalamas River Delta Protected Zone",
+    "lat": 39.43,
+    "lng": 20.12,
+    "protection_level": "Highly Protected",
+    "region": "Epirus",
+    "note": "Protected delta area — fishing heavily restricted."
+  },
+  {
+    "name": "Maliakos Gulf Marine Reserve",
+    "lat": 38.87,
+    "lng": 22.6,
+    "protection_level": "Highly Protected",
+    "region": "Central Greece",
+    "note": "Important marine ecosystem — restricted fishing."
+  },
+  {
+    "name": "Evia West Coast MPA",
+    "lat": 38.5,
+    "lng": 23.2,
+    "protection_level": "Highly Protected",
+    "region": "Central Greece",
+    "note": "Protected Euboean Gulf zone — check local rules."
+  },
+  {
+    "name": "Pagasitikos Gulf Eastern MPA",
+    "lat": 39.25,
+    "lng": 23.2,
+    "protection_level": "Moderately Protected",
+    "region": "Thessaly",
+    "note": "Moderately protected — recreational fishing with restrictions."
+  },
+  {
+    "name": "Saronikos Gulf Western Zone",
+    "lat": 37.72,
+    "lng": 23.5,
+    "protection_level": "Moderately Protected",
+    "region": "Attica",
+    "note": "Moderately protected — fishing allowed with daily limits."
+  },
+  {
+    "name": "Kavala Bay Marine Protected Zone",
+    "lat": 40.94,
+    "lng": 24.4,
+    "protection_level": "Moderately Protected",
+    "region": "Eastern Macedonia and Thrace",
+    "note": "Restricted area — certain fishing methods prohibited."
+  },
+  {
+    "name": "Thermaikos Gulf South Zone",
+    "lat": 40.35,
+    "lng": 22.9,
+    "protection_level": "Moderately Protected",
+    "region": "Central Macedonia",
+    "note": "Moderately protected — rod fishing permitted with limits."
+  }
+]

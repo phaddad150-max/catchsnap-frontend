@@ -1,0 +1,229 @@
+[
+  {
+    "id": 500,
+    "name": "Faliron Bay Public Piers",
+    "lat": 37.942,
+    "lng": 23.685,
+    "region": "Attica",
+    "access": "Easy - 5 min walk from free public parking",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging",
+      "Handline"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns",
+      "Traps"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Early morning & dusk",
+    "fishing_type": "Shore casting & jigging",
+    "warnings": "Busy promenade — watch for swimmers and boats",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 501,
+    "name": "Vouliagmeni Rocky Shores",
+    "lat": 37.812,
+    "lng": 23.775,
+    "region": "Attica",
+    "access": "Moderate - 10 min walk from parking area",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns",
+      "Bottom trawling"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Dawn and late afternoon",
+    "fishing_type": "Rock fishing & spinning",
+    "warnings": "Slippery rocks when wet — wear good shoes",
+    "difficulty": "Moderate"
+  },
+  {
+    "id": 502,
+    "name": "Glyfada Promenade",
+    "lat": 37.865,
+    "lng": 23.753,
+    "region": "Attica",
+    "access": "Very easy - directly from promenade",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging",
+      "Handline"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Evening and night",
+    "fishing_type": "Urban shore fishing",
+    "warnings": "High foot traffic",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 505,
+    "name": "Nafplio Harbor & Rocky Coast",
+    "lat": 37.568,
+    "lng": 22.796,
+    "region": "Argolis",
+    "access": "Easy - parking within 200m",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Sunrise and sunset",
+    "fishing_type": "Harbor jigging & casting",
+    "warnings": "Strong currents near harbor entrance",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 506,
+    "name": "Kalamata Beachfront",
+    "lat": 37.038,
+    "lng": 22.113,
+    "region": "Messenia",
+    "access": "Easy - multiple access points along promenade",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging",
+      "Handline"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns",
+      "Traps"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Early morning",
+    "fishing_type": "Beach and promenade fishing",
+    "warnings": "Can be windy in afternoon",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 508,
+    "name": "Aegina Town Pier & Marina",
+    "lat": 37.746,
+    "lng": 23.427,
+    "region": "Aegina",
+    "access": "Very easy - right in town center",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Dawn and dusk",
+    "fishing_type": "Pier and marina casting",
+    "warnings": "Ferry traffic — stay clear of berths",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 509,
+    "name": "Paros Naoussa Harbor",
+    "lat": 37.124,
+    "lng": 25.236,
+    "region": "Cyclades",
+    "access": "Easy - limited parking 5 min away",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Early morning",
+    "fishing_type": "Harbor and rocky shore",
+    "warnings": "Tourist area in summer — fish early",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 510,
+    "name": "Heraklion Old Port",
+    "lat": 35.342,
+    "lng": 25.134,
+    "region": "Crete",
+    "access": "Easy - parking available nearby",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Evening",
+    "fishing_type": "Old port shore fishing",
+    "warnings": "Watch for large waves during storms",
+    "difficulty": "Moderate"
+  },
+  {
+    "id": 511,
+    "name": "Chania Old Harbor",
+    "lat": 35.516,
+    "lng": 24.018,
+    "region": "Crete",
+    "access": "Very easy - central location",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging",
+      "Handline"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Sunset",
+    "fishing_type": "Harbor wall fishing",
+    "warnings": "Very busy with tourists",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 512,
+    "name": "Piraeus Mikrolimano",
+    "lat": 37.935,
+    "lng": 23.683,
+    "region": "Attica",
+    "access": "Easy - parking at marina",
+    "allowed_gear": [
+      "Rod & line",
+      "Spinning",
+      "Jigging"
+    ],
+    "prohibited_gear": [
+      "Nets",
+      "Spearguns"
+    ],
+    "daily_limit_kg": 5,
+    "best_time": "Night fishing recommended",
+    "fishing_type": "Marina and rocky breakwater",
+    "warnings": "Strong winds can occur",
+    "difficulty": "Moderate"
+  }
+]
