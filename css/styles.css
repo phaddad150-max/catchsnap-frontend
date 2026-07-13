@@ -1,0 +1,9 @@
+body { font-family: 'Inter', system-ui, sans-serif; }
+.app-container { max-width: 420px; margin: 0 auto; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); border-radius: 3rem; overflow: hidden; border: 12px solid #111827; position: relative; }
+.phone-frame { background: #111827; padding: 12px; border-radius: 3rem; }
+.fish-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.fish-card:hover { transform: translateY(-4px); }
+#map { height: 360px; width: 100%; border-radius: 1rem; }
+.leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; }
+.leaflet-popup-content { margin: 0; font-size: 13px; }
+.section-header { font-size: 0.75rem; font-weight: 600; color: #71717a; text-transform: uppercase; letter-spacing: 0.05em; }

@@ -1,0 +1,14 @@
+{
+  "name": "catchsnap-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CatchSnap AI / LegalBite Greece — fishing legal compliance prototype",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}
