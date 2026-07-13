@@ -1,0 +1,220 @@
+const I18N = {
+  en: {
+    appSubtitle: 'Greece • Legal Fishing',
+    navMap: 'Map',
+    navSnap: 'Snap',
+    navJournal: 'Journal',
+    navLegal: 'Legal',
+    identifyTitle: 'Identify Your Catch',
+    identifySubtitle: 'Snap a photo for instant AI species ID, legal check & nutrition insights',
+    tryExample: 'Try an Example',
+    uploadPhoto: 'Upload your own photo',
+    uploadHint: 'JPG, PNG • Camera or gallery',
+    analyzingTitle: 'Analyzing your catch...',
+    analyzingSubtitle: 'Identifying species • Checking size limits • Calculating nutrition',
+    estLength: 'Est. Length',
+    legalStatus: 'Legal Status',
+    fullyLegal: 'Fully Legal',
+    aboveMin: 'Above minimum size',
+    belowMin: 'Below Min',
+    nutrition: 'Nutritional Benefits',
+    sustainability: 'Sustainability & Impact',
+    ecoScore: 'Eco-Score',
+    addJournal: 'Add to My Journal',
+    reportingGuidance: 'Reporting Guidance',
+    shareCatch: 'Share Your Catch',
+    snapAnother: 'Snap another catch',
+    addedToJournal: 'Added to Journal!',
+    myJournal: 'My Journal',
+    catchesLogged: (n) => `${n} catch${n === 1 ? '' : 'es'} logged`,
+    noCatches: 'No catches yet',
+    noCatchesDesc: 'Use CatchSnap to identify and log your first catch',
+    legalBadge: 'Legal',
+    belowMinLabel: 'Below min',
+    entryRemovedDesc: 'Catch deleted from your journal.',
+    deleteConfirm: 'Delete this entry?',
+    legalGuide: 'Legal Guide',
+    legalGuideSubtitle: 'Greek recreational fishing regulations',
+    mandatoryReporting: 'Mandatory Reporting',
+    mandatoryReportingDesc: 'Since 2026, recreational sea fishers in Greece must register and report certain catches via the official national digital system.',
+    whyReport: 'Why Report?',
+    whyReport1: 'Helps scientists manage fish stocks sustainably',
+    whyReport2: 'Protects endangered and overfished species',
+    whyReport3: 'Avoids potential fines and legal issues',
+    howToReport: 'How to Report',
+    step1Title: 'Register Online',
+    step1Desc: 'Go to the official national recreational fishing portal',
+    step2Title: 'Complete Registration',
+    step2Desc: 'Free annual digital registration',
+    step3Title: 'Report Catches',
+    step3Desc: 'Log catches electronically — same day for many species',
+    keyRegulations: 'Key Regulations',
+    dailyBagLimit: 'Daily bag limit',
+    dailyBagLimitValue: '5 kg per person',
+    licenseRequired: 'License required',
+    licenseRequiredValue: 'Free annual registration',
+    reporting: 'Reporting',
+    reportingValue: 'Electronic, same-day',
+    openPortal: 'Open Official Portal',
+    portalDisclaimer: 'This app guides you — it does not replace the official system.',
+    fishingMap: 'Fishing Map',
+    fishingMapSubtitle: 'Tap a marker to explore spots',
+    protected: 'Protected',
+    spots: 'Spots',
+    fishingType: 'Fishing Type',
+    ftAll: 'All',
+    ftShore: 'Shore',
+    ftBoat: 'Boat',
+    ftSpear: 'Spear',
+    searchPlaceholder: 'Search spots (Aegean, Crete, Attica...)',
+    allSpots: 'All Spots',
+    easyFilter: 'Easy',
+    moderateFilter: 'Moderate',
+    legalOnly: 'Legal only',
+    nearMe: 'Near Me',
+    easySpot: 'Easy spot',
+    moderateSpot: 'Moderate spot',
+    protectedLegend: 'Protected',
+    mapFooter: 'Leaflet | © CARTO · Data: ProtectedSeas Navigator Greece',
+    confidence: (n) => `${n}% confidence`,
+    logCatchHere: 'Log Catch Here',
+    directions: 'Directions',
+    spotSelected: (name) => `Spot selected: ${name}`,
+    copyCaption: 'Copy Caption',
+    share: 'Share...',
+    close: 'Close',
+    captionCopied: 'Caption copied!',
+    geolocationError: 'Enable location services',
+    geolocationUnavailable: 'Geolocation not available',
+  },
+  el: {
+    appSubtitle: 'Ελλάδα • Νόμιμη Αλιεία',
+    navMap: 'Χάρτης',
+    navSnap: 'Φωτό',
+    navJournal: 'Ημερολόγιο',
+    navLegal: 'Νόμοι',
+    identifyTitle: 'Αναγνώρισε την Αλιεία σου',
+    identifySubtitle: 'Τράβηξε φωτογραφία για άμεση αναγνώριση, νομιμότητα & θρεπτική αξία',
+    tryExample: 'Δοκίμασε Παράδειγμα',
+    uploadPhoto: 'Ανέβασε δική σου φωτογραφία',
+    uploadHint: 'JPG, PNG • Κάμερα ή γκαλερί',
+    analyzingTitle: 'Ανάλυση αλιεύματός σου...',
+    analyzingSubtitle: 'Αναγνώριση είδους • Έλεγχος μεγέθους • Υπολογισμός θρεπτικής αξίας',
+    estLength: 'Εκτιμ. Μέγεθος',
+    legalStatus: 'Νομικό Status',
+    fullyLegal: 'Απόλυτα Νόμιμο',
+    aboveMin: 'Πάνω από το ελάχιστο',
+    belowMin: 'Κάτω Ορίου',
+    nutrition: 'Θρεπτικά Οφέλη',
+    sustainability: 'Βιωσιμότητα & Επίδραση',
+    ecoScore: 'Οικο-Βαθμός',
+    addJournal: 'Προσθήκη στο Ημερολόγιο',
+    reportingGuidance: 'Οδηγίες Αναφοράς',
+    shareCatch: 'Κοινοποίησε την Αλιεία',
+    snapAnother: 'Νέα φωτογραφία',
+    addedToJournal: 'Προστέθηκε στο Ημερολόγιο!',
+    myJournal: 'Το Ημερολόγιό μου',
+    catchesLogged: (n) => `${n} αλίευμα${n === 1 ? '' : 'τα'} καταγεγραμμένα`,
+    noCatches: 'Δεν υπάρχουν αλιεύματα',
+    noCatchesDesc: 'Χρησιμοποίησε το CatchSnap για να καταγράψεις το πρώτο σου αλίευμα',
+    legalBadge: 'Νόμιμο',
+    belowMinLabel: 'Κάτω ορίου',
+    entryRemovedDesc: 'Το αλίευμα διαγράφηκε από το ημερολόγιό σου.',
+    deleteConfirm: 'Διαγραφή αυτής της καταχώρησης;',
+    legalGuide: 'Νομικός Οδηγός',
+    legalGuideSubtitle: 'Κανονισμοί ερασιτεχνικής αλιείας στην Ελλάδα',
+    mandatoryReporting: 'Υποχρεωτική Αναφορά',
+    mandatoryReportingDesc: 'Από το 2026, οι ερασιτέχνες θαλάσσιοι αλιείς στην Ελλάδα πρέπει να εγγράφονται και να αναφέρουν ορισμένα αλιεύματα μέσω του επίσημου εθνικού ψηφιακού συστήματος.',
+    whyReport: 'Γιατί να Αναφέρω;',
+    whyReport1: 'Βοηθά τους επιστήμονες να διαχειριστούν τα αλιευτικά αποθέματα βιώσιμα',
+    whyReport2: 'Προστατεύει τα υπό εξαφάνιση και υπεραλιευμένα είδη',
+    whyReport3: 'Αποφεύγει πιθανά πρόστιμα και νομικά ζητήματα',
+    howToReport: 'Πώς να Αναφέρω',
+    step1Title: 'Εγγραφή Διαδικτυακά',
+    step1Desc: 'Μεταβείτε στην επίσημη πύλη ερασιτεχνικής αλιείας',
+    step2Title: 'Ολοκλήρωση Εγγραφής',
+    step2Desc: 'Δωρεάν ετήσια ψηφιακή εγγραφή',
+    step3Title: 'Αναφορά Αλιευμάτων',
+    step3Desc: 'Καταγραφή ηλεκτρονικά — αυθημερόν για πολλά είδη',
+    keyRegulations: 'Βασικοί Κανονισμοί',
+    dailyBagLimit: 'Ημερήσιο όριο',
+    dailyBagLimitValue: '5 κιλά ανά άτομο',
+    licenseRequired: 'Άδεια',
+    licenseRequiredValue: 'Δωρεάν ετήσια εγγραφή',
+    reporting: 'Αναφορά',
+    reportingValue: 'Ηλεκτρονική, αυθημερόν',
+    openPortal: 'Άνοιγμα Επίσημης Πύλης',
+    portalDisclaimer: 'Η εφαρμογή σε καθοδηγεί — δεν αντικαθιστά το επίσημο σύστημα.',
+    fishingMap: 'Αλιευτικός Χάρτης',
+    fishingMapSubtitle: 'Πάτησε ένα σημείο για λεπτομέρειες',
+    protected: 'Προστατευμένες',
+    spots: 'Θέσεις',
+    fishingType: 'Τύπος Αλιείας',
+    ftAll: 'Όλοι',
+    ftShore: 'Ακτή',
+    ftBoat: 'Σκάφος',
+    ftSpear: 'Ψαροτούφεκο',
+    searchPlaceholder: 'Αναζήτηση (Αιγαίο, Κρήτη, Αττική...)',
+    allSpots: 'Όλες',
+    easyFilter: 'Εύκολες',
+    moderateFilter: 'Μέτριες',
+    legalOnly: 'Μόνο νόμιμες',
+    nearMe: 'Κοντά μου',
+    easySpot: 'Εύκολη θέση',
+    moderateSpot: 'Μέτρια θέση',
+    protectedLegend: 'Προστατευμένη',
+    mapFooter: 'Leaflet | © CARTO · Δεδομένα: ProtectedSeas Navigator Ελλάδα',
+    confidence: (n) => `${n}% βεβαιότητα`,
+    logCatchHere: 'Καταγραφή Αλιεύματος',
+    directions: 'Οδηγίες',
+    spotSelected: (name) => `Επιλέχθηκε: ${name}`,
+    copyCaption: 'Αντιγραφή',
+    share: 'Κοινοποίηση...',
+    close: 'Κλείσιμο',
+    captionCopied: 'Αντιγράφηκε!',
+    geolocationError: 'Ενεργοποιήστε τις υπηρεσίες τοποθεσίας',
+    geolocationUnavailable: 'Η τοποθεσία δεν είναι διαθέσιμη',
+  },
+};
+
+let currentLang = localStorage.getItem('catchsnap-lang') || 'gr';
+
+function t(key, ...args) {
+  const lang = currentLang === 'gr' ? 'el' : 'en';
+  const val = I18N[lang][key];
+  if (typeof val === 'function') return val(...args);
+  return val ?? I18N.en[key] ?? key;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('catchsnap-lang', lang);
+  document.documentElement.lang = lang === 'gr' ? 'el' : 'en';
+  document.querySelectorAll('.lang-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  applyTranslations();
+  if (typeof window.onLanguageChange === 'function') window.onLanguageChange();
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.dataset.i18n;
+    const val = t(key);
+    if (val != null) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  const sub = document.getElementById('header-subtitle');
+  if (sub) sub.textContent = `${t('appSubtitle')} GR`;
+}
+
+window.t = t;
+window.setLanguage = setLanguage;
+window.applyTranslations = applyTranslations;
+window.getCurrentLang = () => currentLang;
+window.getFishDisplayName = (fish) => {
+  if (currentLang === 'gr' && fish.greek_name) return fish.greek_name;
+  return fish.species;
+};

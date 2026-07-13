@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -14,12 +14,7 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              DEFAULT: '#3779EC',
-              dark: '#2856C7',
-              darker: '#1E4A9E',
-              light: '#E8F1FE',
-            }
+            brand: { DEFAULT: '#3779EC', dark: '#2856C7', light: '#E8F1FE' }
           }
         }
       }
@@ -39,8 +34,11 @@
       <div class="header-brand">
         <img src="assets/logo.png" alt="CatchSnap" class="brand-logo">
         <div>
-          <div class="header-title">CatchSnap</div>
-          <div class="header-sub">Greece • Legal Fishing <span class="text-brand">GR</span></div>
+          <div class="header-title-row">
+            <span class="header-title">CatchSnap</span>
+            <span class="header-gr-badge">GR</span>
+          </div>
+          <div class="header-sub" id="header-subtitle">Ελλάδα • Νόμιμη Αλιεία GR</div>
         </div>
       </div>
       <div class="lang-toggle">
@@ -51,169 +49,163 @@
 
     <main class="main-scroll" id="main-content">
 
-      <!-- SNAP / IDENTIFY -->
-      <section id="step-upload">
+      <!-- SNAP -->
+      <section id="step-upload" class="snap-page">
         <div class="snap-hero">
           <div class="snap-camera"><i class="fa-solid fa-camera"></i></div>
-          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Identify Your Catch</h2>
-          <p class="text-sm text-slate-500 mt-1 max-w-xs mx-auto">Snap a photo for instant AI species ID, legal check &amp; nutrition insights</p>
+          <h2 class="snap-title" data-i18n="identifyTitle">Αναγνώρισε την Αλιεία σου</h2>
+          <p class="snap-subtitle" data-i18n="identifySubtitle">Τράβηξε φωτογραφία για άμεση αναγνώριση, νομιμότητα &amp; θρεπτική αξία</p>
         </div>
 
-        <p class="section-header mb-2">Try an example</p>
+        <p class="section-header mb-2.5" data-i18n="tryExample">Δοκίμασε Παράδειγμα</p>
         <div class="example-row" id="example-fish-grid"></div>
 
         <div class="upload-zone" id="upload-trigger">
           <input type="file" id="real-upload" accept="image/*" class="hidden">
-          <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand mb-2"></i>
-          <div class="font-semibold text-brand">Upload your own photo</div>
-          <div class="text-xs text-slate-400 mt-1">JPG, PNG + Camera or gallery</div>
+          <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="upload-title" data-i18n="uploadPhoto">Ανέβασε δική σου φωτογραφία</div>
+          <div class="upload-hint" data-i18n="uploadHint">JPG, PNG • Κάμερα ή γκαλερί</div>
         </div>
       </section>
 
-      <section id="step-analyzing" class="hidden text-center py-16">
-        <div class="mx-auto w-16 h-16 border-4 border-brand-light border-t-brand rounded-full animate-spin mb-5"></div>
-        <h3 class="font-semibold text-lg">Analyzing your catch...</h3>
-        <p class="text-sm text-slate-500 mt-1">Identifying species • Checking size limits • Calculating nutrition</p>
+      <section id="step-analyzing" class="hidden analyzing-page">
+        <div class="analyzing-spinner"></div>
+        <h3 class="font-semibold text-lg" data-i18n="analyzingTitle">Ανάλυση αλιεύματός σου...</h3>
+        <p class="text-sm text-slate-500 mt-2 text-center max-w-xs" data-i18n="analyzingSubtitle">Αναγνώριση είδους • Έλεγχος μεγέθους • Υπολογισμός θρεπτικής αξίας</p>
       </section>
 
-      <section id="step-results" class="hidden page-panel">
-        <div class="flex items-center gap-3 mb-4">
-          <div id="result-fish-image" class="w-20 h-20 rounded-2xl overflow-hidden border flex-shrink-0 bg-slate-100"></div>
-          <div class="flex-1 min-w-0">
-            <div id="result-species" class="font-bold text-lg leading-tight"></div>
-            <div id="result-confidence" class="text-brand text-sm font-medium mt-0.5"></div>
-            <div id="result-location" class="text-xs text-slate-500 mt-1"></div>
+      <section id="step-results" class="hidden results-page">
+        <div class="results-card">
+          <div class="flex items-center gap-3 mb-4">
+            <div id="result-fish-image" class="result-thumb"></div>
+            <div class="flex-1 min-w-0">
+              <div id="result-species" class="font-bold text-lg leading-tight text-slate-900"></div>
+              <div id="result-confidence" class="text-brand text-sm font-medium mt-1"></div>
+              <div id="result-location" class="text-xs text-slate-500 mt-1"></div>
+            </div>
           </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="bg-slate-50 rounded-xl p-3">
-            <div class="text-[10px] text-slate-500 font-semibold uppercase">Estimated Size</div>
-            <div id="result-length" class="text-2xl font-bold text-brand-dark tabular-nums"></div>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="stat-box">
+              <div class="stat-label" data-i18n="estLength">Εκτιμ. Μέγεθος</div>
+              <div id="result-length" class="stat-value"></div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label" data-i18n="legalStatus">Νομικό Status</div>
+              <div id="result-legal-status" class="mt-1"></div>
+            </div>
           </div>
-          <div class="bg-slate-50 rounded-xl p-3">
-            <div class="text-[10px] text-slate-500 font-semibold uppercase">Legal Status</div>
-            <div id="result-legal-status" class="mt-1"></div>
+          <div class="mb-4">
+            <div class="section-header mb-2" data-i18n="nutrition">Θρεπτικά Οφέλη</div>
+            <div id="result-nutrition" class="nutrition-list"></div>
           </div>
-        </div>
-        <div class="mb-4">
-          <div class="section-header mb-2">Nutritional Benefits</div>
-          <div id="result-nutrition" class="text-sm space-y-2 text-slate-600"></div>
-        </div>
-        <div class="mb-5">
-          <div class="section-header mb-2">Sustainability &amp; Impact</div>
-          <div class="bg-brand-light rounded-xl p-3">
-            <div class="text-sm font-medium">Eco-Score</div>
-            <div id="result-eco" class="text-3xl font-bold text-brand-dark tabular-nums"></div>
+          <div class="mb-5">
+            <div class="section-header mb-2" data-i18n="sustainability">Βιωσιμότητα &amp; Επίδραση</div>
+            <div class="eco-box">
+              <div class="text-sm font-medium text-slate-700" data-i18n="ecoScore">Οικο-Βαθμός</div>
+              <div id="result-eco" class="eco-value"></div>
+            </div>
           </div>
-        </div>
-        <div class="space-y-2">
-          <button type="button" id="btn-add-journal" class="btn-primary"><i class="fa-solid fa-book"></i> Add to My Journal</button>
-          <button type="button" id="btn-share" class="w-full py-3 border border-brand text-brand-dark rounded-xl font-semibold text-sm">Share Your Catch</button>
-          <button type="button" id="btn-compliance" class="w-full py-3 border border-slate-200 text-slate-600 rounded-xl text-sm">Reporting Guidance</button>
-          <button type="button" id="btn-reset" class="w-full py-2 text-slate-400 text-sm">Snap another catch</button>
+          <div class="space-y-2.5">
+            <button type="button" id="btn-add-journal" class="btn-primary"><i class="fa-solid fa-book"></i> <span data-i18n="addJournal">Προσθήκη στο Ημερολόγιο</span></button>
+            <button type="button" id="btn-share" class="btn-secondary"><span data-i18n="shareCatch">Κοινοποίησε την Αλιεία</span></button>
+            <button type="button" id="btn-compliance" class="btn-ghost"><span data-i18n="reportingGuidance">Οδηγίες Αναφοράς</span></button>
+            <button type="button" id="btn-reset" class="btn-text" data-i18n="snapAnother">Νέα φωτογραφία</button>
+          </div>
         </div>
       </section>
 
       <!-- MAP -->
-      <section id="step-map" class="hidden">
-        <div class="flex items-start justify-between gap-2">
+      <section id="step-map" class="hidden map-page">
+        <div class="map-header-row">
           <div>
-            <h2 class="page-title">Fishing Map</h2>
-            <p class="page-subtitle">Tap a marker to explore spots</p>
+            <h2 class="page-title" data-i18n="fishingMap">Αλιευτικός Χάρτης</h2>
+            <p class="page-subtitle" data-i18n="fishingMapSubtitle">Πάτησε ένα σημείο για λεπτομέρειες</p>
+          </div>
+          <div class="map-stats">
+            <span class="stat-pill protected"><span id="protected-count">0</span> <span data-i18n="protected">Προστατευμένες</span></span>
+            <span class="stat-pill legal"><span id="legal-count">0</span> <span data-i18n="spots">Θέσεις</span></span>
           </div>
         </div>
 
-        <div class="map-stats">
-          <span class="stat-pill protected"><span id="protected-count">0</span> Protected</span>
-          <span class="stat-pill legal"><span id="legal-count">0</span> Spots</span>
-        </div>
-
-        <p class="section-header mb-2">Fishing Type</p>
+        <p class="section-header mb-2" data-i18n="fishingType">Τύπος Αλιείας</p>
         <div class="fishing-type-row">
-          <button type="button" class="type-btn active" data-type="all"><i class="fa-solid fa-fish mr-1"></i> All</button>
-          <button type="button" class="type-btn" data-type="shore"><i class="fa-solid fa-water mr-1"></i> Shore</button>
-          <button type="button" class="type-btn disabled" disabled>Boat</button>
-          <button type="button" class="type-btn disabled" disabled>Spear</button>
+          <button type="button" class="type-btn active" data-type="all"><i class="fa-solid fa-fish"></i> <span data-i18n="ftAll">Όλοι</span></button>
+          <button type="button" class="type-btn type-shore" data-type="shore"><i class="fa-solid fa-water text-red-500"></i> <span data-i18n="ftShore">Ακτή</span></button>
+          <button type="button" class="type-btn disabled" disabled><span data-i18n="ftBoat">Σκάφος</span></button>
+          <button type="button" class="type-btn disabled" disabled><span data-i18n="ftSpear">Ψαροτούφεκο</span></button>
         </div>
 
-        <div class="search-wrap">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="map-search" placeholder="Search spots (Aegean, Crete, Attica...)">
-        </div>
+        <div class="map-card">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="map-search" data-i18n-placeholder="searchPlaceholder" placeholder="Αναζήτηση (Αιγαίο, Κρήτη, Αττική...)">
+          </div>
 
-        <div class="filter-row">
-          <button type="button" id="filter-all" class="filter-pill active">All Spots</button>
-          <button type="button" id="filter-easy" class="filter-pill"><span class="dot easy"></span> Easy</button>
-          <button type="button" id="filter-moderate" class="filter-pill"><span class="dot moderate"></span> Moderate</button>
-          <label class="filter-check"><input type="checkbox" id="legal-only-toggle"> Legal only</label>
-          <button type="button" id="btn-near-me" class="btn-near-me">Near Me</button>
-        </div>
+          <div class="filter-row">
+            <button type="button" id="filter-all" class="filter-pill active" data-i18n="allSpots">Όλες</button>
+            <button type="button" id="filter-easy" class="filter-pill filter-easy"><span class="dot easy"></span> <span data-i18n="easyFilter">Εύκολες</span></button>
+            <button type="button" id="filter-moderate" class="filter-pill filter-moderate"><span class="dot moderate"></span> <span data-i18n="moderateFilter">Μέτριες</span></button>
+            <label class="filter-check"><input type="checkbox" id="legal-only-toggle"> <span data-i18n="legalOnly">Μόνο νόμιμες</span></label>
+            <button type="button" id="btn-near-me" class="btn-near-me" data-i18n="nearMe">Κοντά μου</button>
+          </div>
 
-        <div id="map"></div>
-        <div class="map-legend">
-          <span><span class="dot easy"></span> Easy spot</span>
-          <span><span class="dot moderate"></span> Moderate spot</span>
-          <span><i class="fa-solid fa-xmark text-red-500"></i> Protected</span>
+          <div id="map"></div>
+          <div class="map-legend">
+            <span><span class="dot easy"></span> <span data-i18n="easySpot">Εύκολη θέση</span></span>
+            <span><span class="dot moderate"></span> <span data-i18n="moderateSpot">Μέτρια θέση</span></span>
+            <span><i class="fa-solid fa-xmark text-red-500"></i> <span data-i18n="protectedLegend">Προστατευμένη</span></span>
+          </div>
+          <p class="map-footer" data-i18n="mapFooter">Leaflet | © CARTO · Δεδομένα: ProtectedSeas Navigator Ελλάδα</p>
         </div>
-        <p class="map-footer">Leaflet | © CARTO · Data: ProtectedSeas Navigator Greece</p>
       </section>
 
-      <!-- JOURNAL (full page) -->
-      <section id="step-journal" class="hidden">
-        <h2 class="page-title">My Journal</h2>
-        <p class="page-subtitle" id="journal-count-label">0 catches logged</p>
-        <div id="journal-list" class="mt-4"></div>
+      <!-- JOURNAL -->
+      <section id="step-journal" class="hidden journal-page">
+        <div class="journal-header-row">
+          <div>
+            <h2 class="page-title" data-i18n="myJournal">Το Ημερολόγιό μου</h2>
+            <p class="page-subtitle" id="journal-count-label">0 αλιεύματα καταγεγραμμένα</p>
+          </div>
+          <div class="journal-header-icon"><i class="fa-solid fa-book-open"></i></div>
+        </div>
+        <div id="journal-list" class="journal-list"></div>
         <div id="journal-empty" class="journal-empty hidden">
-          <i class="fa-solid fa-book block"></i>
-          <p class="font-medium text-slate-500">No catches yet</p>
-          <p class="text-xs mt-1">Use CatchSnap to identify and log your first catch</p>
+          <i class="fa-solid fa-book-open"></i>
+          <p class="font-semibold text-slate-600" data-i18n="noCatches">Δεν υπάρχουν αλιεύματα</p>
+          <p class="text-sm mt-1" data-i18n="noCatchesDesc">Χρησιμοποίησε το CatchSnap για να καταγράψεις το πρώτο σου αλίευμα</p>
         </div>
       </section>
 
-      <!-- LEGAL -->
-      <section id="step-legal" class="hidden">
+      <!-- LEGAL (unchanged structure, i18n wired) -->
+      <section id="step-legal" class="hidden legal-page">
         <div class="flex items-start justify-between">
           <div>
-            <h2 class="page-title">Legal Guide</h2>
-            <p class="page-subtitle">Greek recreational fishing regulations</p>
+            <h2 class="page-title" data-i18n="legalGuide">Νομικός Οδηγός</h2>
+            <p class="page-subtitle" data-i18n="legalGuideSubtitle">Κανονισμοί ερασιτεχνικής αλιείας στην Ελλάδα</p>
           </div>
           <i class="fa-solid fa-circle-info text-slate-300 mt-1"></i>
         </div>
-
         <div class="alert-box">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div>
-            <div class="font-bold text-orange-900 text-sm">Mandatory Reporting</div>
-            <p class="text-xs text-orange-800 mt-1">Since 2026, recreational sea fishers in Greece must register and report certain catches via the official national digital system.</p>
+            <div class="font-bold text-orange-900 text-sm" data-i18n="mandatoryReporting">Υποχρεωτική Αναφορά</div>
+            <p class="text-xs text-orange-800 mt-1 leading-relaxed" data-i18n="mandatoryReportingDesc">Από το 2026, οι ερασιτέχνες θαλάσσιοι αλιείς στην Ελλάδα πρέπει να εγγράφονται και να αναφέρουν ορισμένα αλιεύματα μέσω του επίσημου εθνικού ψηφιακού συστήματος.</p>
           </div>
         </div>
-
-        <div class="legal-section-title">Why report?</div>
-        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span>Helps scientists manage fish stocks sustainably</span></div>
-        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span>Protects endangered and overfished species</span></div>
-        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span>Avoids potential fines and legal issues</span></div>
-
-        <div class="legal-section-title">How to report</div>
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div><div class="step-title">Register Online</div><div class="step-desc">Go to the official national recreational fishing portal</div></div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div><div class="step-title">Complete Registration</div><div class="step-desc">Free annual digital registration</div></div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div><div class="step-title">Report Catches</div><div class="step-desc">Log catches electronically — same day for many species</div></div>
-        </div>
-
-        <div class="legal-section-title">Key regulations</div>
-        <div class="reg-item"><i class="fa-solid fa-weight-hanging"></i><div><div class="font-semibold text-sm">Daily bag limit</div><div class="text-xs text-slate-500">5 kg per person</div></div></div>
-        <div class="reg-item"><i class="fa-solid fa-id-card"></i><div><div class="font-semibold text-sm">License required</div><div class="text-xs text-slate-500">Free annual registration</div></div></div>
-        <div class="reg-item"><i class="fa-solid fa-clock"></i><div><div class="font-semibold text-sm">Reporting</div><div class="text-xs text-slate-500">Electronic, same-day</div></div></div>
-
-        <button type="button" id="btn-open-portal" class="btn-primary">Open Official Portal <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i></button>
-        <p class="legal-disclaimer">This app guides you — it does not replace the official system.</p>
+        <div class="legal-section-title" data-i18n="whyReport">Γιατί να Αναφέρω;</div>
+        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span data-i18n="whyReport1">Βοηθά τους επιστήμονες να διαχειριστούν τα αλιευτικά αποθέματα βιώσιμα</span></div>
+        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span data-i18n="whyReport2">Προστατεύει τα υπό εξαφάνιση και υπεραλιευμένα είδη</span></div>
+        <div class="legal-check-item"><i class="fa-solid fa-circle-check"></i><span data-i18n="whyReport3">Αποφεύγει πιθανά πρόστιμα και νομικά ζητήματα</span></div>
+        <div class="legal-section-title" data-i18n="howToReport">Πώς να Αναφέρω</div>
+        <div class="step-item"><div class="step-num">1</div><div><div class="step-title" data-i18n="step1Title">Εγγραφή Διαδικτυακά</div><div class="step-desc" data-i18n="step1Desc">Μεταβείτε στην επίσημη πύλη ερασιτεχνικής αλιείας</div></div></div>
+        <div class="step-item"><div class="step-num">2</div><div><div class="step-title" data-i18n="step2Title">Ολοκλήρωση Εγγραφής</div><div class="step-desc" data-i18n="step2Desc">Δωρεάν ετήσια ψηφιακή εγγραφή</div></div></div>
+        <div class="step-item"><div class="step-num">3</div><div><div class="step-title" data-i18n="step3Title">Αναφορά Αλιευμάτων</div><div class="step-desc" data-i18n="step3Desc">Καταγραφή ηλεκτρονικά — αυθημερόν για πολλά είδη</div></div></div>
+        <div class="legal-section-title" data-i18n="keyRegulations">Βασικοί Κανονισμοί</div>
+        <div class="reg-item"><i class="fa-solid fa-weight-hanging"></i><div><div class="font-semibold text-sm" data-i18n="dailyBagLimit">Ημερήσιο όριο</div><div class="text-xs text-slate-500" data-i18n="dailyBagLimitValue">5 κιλά ανά άτομο</div></div></div>
+        <div class="reg-item"><i class="fa-solid fa-id-card"></i><div><div class="font-semibold text-sm" data-i18n="licenseRequired">Άδεια</div><div class="text-xs text-slate-500" data-i18n="licenseRequiredValue">Δωρεάν ετήσια εγγραφή</div></div></div>
+        <div class="reg-item"><i class="fa-solid fa-clock"></i><div><div class="font-semibold text-sm" data-i18n="reporting">Αναφορά</div><div class="text-xs text-slate-500" data-i18n="reportingValue">Ηλεκτρονική, αυθημερόν</div></div></div>
+        <button type="button" id="btn-open-portal" class="btn-primary"><span data-i18n="openPortal">Άνοιγμα Επίσημης Πύλης</span> <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i></button>
+        <p class="legal-disclaimer" data-i18n="portalDisclaimer">Η εφαρμογή σε καθοδηγεί — δεν αντικαθιστά το επίσημο σύστημα.</p>
       </section>
 
     </main>
@@ -221,50 +213,49 @@
     <nav class="bottom-nav">
       <button type="button" id="nav-map" data-nav="map" class="nav-btn">
         <span class="nav-icon-wrap"><i class="fa-solid fa-map"></i></span>
-        <span>Map</span>
+        <span data-i18n="navMap">Χάρτης</span>
       </button>
       <button type="button" id="nav-snap" data-nav="snap" class="nav-btn active">
-        <span class="nav-icon-wrap"><i class="fa-solid fa-camera"></i></span>
-        <span>Snap</span>
+        <span class="nav-icon-wrap nav-icon-snap"><i class="fa-solid fa-camera"></i></span>
+        <span data-i18n="navSnap">Φωτό</span>
       </button>
       <button type="button" id="nav-journal" data-nav="journal" class="nav-btn">
         <span class="nav-icon-wrap"><i class="fa-solid fa-book-open"></i></span>
-        <span>Journal</span>
+        <span data-i18n="navJournal">Ημερολόγιο</span>
       </button>
       <button type="button" id="nav-legal" data-nav="legal" class="nav-btn">
         <span class="nav-icon-wrap"><i class="fa-solid fa-scale-balanced"></i></span>
-        <span>Legal</span>
+        <span data-i18n="navLegal">Νόμοι</span>
       </button>
     </nav>
   </div>
 
-  <!-- Share Modal -->
-  <div id="share-modal" class="hidden fixed inset-0 z-[60] flex items-end justify-center">
-    <div class="absolute inset-0 bg-black/50" id="share-backdrop"></div>
-    <div class="relative w-full max-w-lg bg-white rounded-t-[2rem] shadow-2xl p-5 pb-8 z-10">
-      <div class="flex justify-center mb-3"><div class="w-10 h-1 bg-slate-200 rounded-full"></div></div>
-      <h3 class="font-semibold text-lg text-center mb-4">Share Your Catch</h3>
-      <div id="share-preview" class="bg-slate-50 rounded-xl p-3 text-xs text-slate-600 mb-4 whitespace-pre-wrap"></div>
+  <div id="share-modal" class="modal-overlay hidden">
+    <div class="modal-backdrop" id="share-backdrop"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="font-semibold text-lg text-center mb-4" data-i18n="shareCatch">Κοινοποίησε την Αλιεία</h3>
+      <div id="share-preview" class="share-preview"></div>
       <div class="grid grid-cols-2 gap-2">
-        <button type="button" id="share-copy" class="py-3 bg-brand text-white rounded-xl text-sm font-medium">Copy Caption</button>
-        <button type="button" id="share-native" class="py-3 border border-slate-200 rounded-xl text-sm font-medium">Share...</button>
+        <button type="button" id="share-copy" class="py-3 bg-brand text-white rounded-xl text-sm font-semibold" data-i18n="copyCaption">Αντιγραφή</button>
+        <button type="button" id="share-native" class="py-3 border border-slate-200 rounded-xl text-sm font-semibold" data-i18n="share">Κοινοποίηση...</button>
       </div>
-      <button type="button" id="share-close" class="w-full mt-3 py-2 text-slate-400 text-sm">Close</button>
+      <button type="button" id="share-close" class="w-full mt-3 py-2 text-slate-400 text-sm" data-i18n="close">Κλείσιμο</button>
     </div>
   </div>
 
-  <div id="compliance-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end justify-center">
-    <div class="bg-white w-full max-w-lg rounded-t-3xl p-5 pb-8">
+  <div id="compliance-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
       <div class="flex justify-between items-center mb-4">
-        <div class="font-semibold text-lg">Reporting Guidance</div>
+        <div class="font-semibold text-lg" data-i18n="reportingGuidance">Οδηγίες Αναφοράς</div>
         <button type="button" id="compliance-close" class="text-2xl text-slate-400 px-2">×</button>
       </div>
-      <button type="button" id="btn-national-report" class="btn-primary">Open Official Portal</button>
+      <button type="button" id="btn-national-report" class="btn-primary" data-i18n="openPortal">Άνοιγμα Επίσημης Πύλης</button>
     </div>
   </div>
 
-  <div id="spot-details-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-end justify-center">
-    <div class="bg-white w-full max-w-lg rounded-t-3xl p-5 pb-6 max-h-[85vh] overflow-auto">
+  <div id="spot-details-modal" class="modal-overlay hidden">
+    <div class="modal-sheet modal-sheet-tall">
       <div class="flex justify-between items-center mb-3">
         <div>
           <div id="spot-modal-name" class="font-semibold text-lg"></div>
@@ -274,8 +265,8 @@
       </div>
       <div id="spot-modal-content"></div>
       <div class="mt-5 flex gap-2">
-        <button type="button" id="btn-log-catch-spot" class="flex-1 py-3 bg-brand text-white rounded-xl font-semibold text-sm">Log Catch Here</button>
-        <button type="button" id="btn-directions-spot" class="flex-1 py-3 border border-slate-200 rounded-xl font-semibold text-sm">Directions</button>
+        <button type="button" id="btn-log-catch-spot" class="flex-1 py-3 bg-brand text-white rounded-xl font-semibold text-sm"><span data-i18n="logCatchHere">Καταγραφή Αλιεύματος</span></button>
+        <button type="button" id="btn-directions-spot" class="flex-1 py-3 border border-slate-200 rounded-xl font-semibold text-sm" data-i18n="directions">Οδηγίες</button>
       </div>
     </div>
   </div>
@@ -286,6 +277,7 @@
       window.CATCHSNAP_API = 'https://catchsnap-backend.vercel.app/api/v1';
     }
   </script>
+  <script src="js/i18n.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
