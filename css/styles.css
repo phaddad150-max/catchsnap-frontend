@@ -1,9 +1,82 @@
+:root {
+  --brand: #3779EC;
+  --brand-dark: #2856C7;
+  --brand-darker: #1E4A9E;
+  --brand-light: #E8F1FE;
+  --brand-muted: #5B93EF;
+}
+
 body { font-family: 'Inter', system-ui, sans-serif; }
-.app-container { max-width: 420px; margin: 0 auto; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); border-radius: 3rem; overflow: hidden; border: 12px solid #111827; position: relative; }
+
+.app-container {
+  max-width: 420px;
+  margin: 0 auto;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  border-radius: 3rem;
+  overflow: hidden;
+  border: 12px solid #111827;
+  position: relative;
+}
+
 .phone-frame { background: #111827; padding: 12px; border-radius: 3rem; }
+
 .fish-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
 .fish-card:hover { transform: translateY(-4px); }
+
 #map { height: 360px; width: 100%; border-radius: 1rem; }
+
 .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; }
 .leaflet-popup-content { margin: 0; font-size: 13px; }
-.section-header { font-size: 0.75rem; font-weight: 600; color: #71717a; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.section-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Brand utilities */
+.text-brand { color: var(--brand); }
+.text-brand-dark { color: var(--brand-dark); }
+.bg-brand { background-color: var(--brand); }
+.bg-brand-dark { background-color: var(--brand-dark); }
+.bg-brand-light { background-color: var(--brand-light); }
+.border-brand { border-color: var(--brand); }
+.hover\:bg-brand-dark:hover { background-color: var(--brand-dark); }
+.hover\:bg-brand-light:hover { background-color: var(--brand-light); }
+.hover\:border-brand:hover { border-color: var(--brand); }
+
+.bottom-nav {
+  z-index: 40;
+  pointer-events: auto;
+}
+
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  color: #a1a1aa;
+  transition: color 0.15s;
+}
+
+.nav-btn.active { color: var(--brand); }
+.nav-btn:hover { color: var(--brand-dark); }
+
+.brand-logo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-logo-lg {
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+}
