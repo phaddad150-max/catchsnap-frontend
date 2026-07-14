@@ -337,13 +337,53 @@ function updateMapStatPills() {
   document.getElementById('legal-count').textContent = legalMarkers.length;
 }
 
+const SPOT_MARKER_COLORS = {
+  Easy: { bg: '#10b981', ring: '#d1fae5' },
+  Moderate: { bg: '#3b82f6', ring: '#dbeafe' },
+  Hard: { bg: '#f59e0b', ring: '#fef3c7' },
+};
+
+function createSpotMarkerIcon(difficulty, selected = false) {
+  const palette = SPOT_MARKER_COLORS[difficulty] || SPOT_MARKER_COLORS.Easy;
+  const size = selected ? 44 : 36;
+  const innerR = selected ? 16 : 12;
+  const html = `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="${palette.ring}" opacity="0.6"/>
+      <circle cx="${size / 2}" cy="${size / 2}" r="${innerR}" fill="${palette.bg}" stroke="white" stroke-width="2.5"/>
+      ${selected ? `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 1}" fill="none" stroke="${palette.bg}" stroke-width="1.5" opacity="0.5"/>` : ''}
+    </svg>`;
+  return L.divIcon({
+    html,
+    className: 'cs-spot-icon',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
+
+function createProtectedMarkerIcon() {
+  const html = `
+    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="16" cy="16" r="16" fill="#fecaca" opacity="0.5"/>
+      <circle cx="16" cy="16" r="11" fill="#ef4444" stroke="white" stroke-width="2"/>
+      <path d="M12 12 L20 20 M20 12 L12 20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>`;
+  return L.divIcon({
+    html,
+    className: 'cs-protected-icon',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  });
+}
+
 function initMap() {
-  map = L.map('map', { zoomControl: true }).setView([38.8, 24.0], 6);
+  map = L.map('map', { zoomControl: true, minZoom: 5, maxZoom: 19 }).setView([38.8, 24.0], 6);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 19,
   }).addTo(map);
+  map.zoomControl.setPosition('topright');
   loadMapData();
 }
 
@@ -353,21 +393,17 @@ function loadMapData() {
 
   protectedAreas.forEach((area) => {
     const marker = L.marker([area.lat, area.lng], {
-      icon: L.divIcon({
-        className: 'protected-marker',
-        html: '<span class="protected-x-marker">✕</span>',
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
-      }),
+      icon: createProtectedMarkerIcon(),
+      zIndexOffset: 100,
     }).addTo(map);
     marker.bindPopup(`<div style="min-width:190px;padding:10px"><div style="font-weight:700;color:#ef4444;font-size:13px">${area.name}</div><div style="font-size:11px;color:#64748b;margin-top:2px">${area.region}</div><div style="font-size:11px;color:#ef4444;margin-top:4px;font-weight:600">${area.protection_level}</div><div style="font-size:11px;color:#475569;margin-top:4px;line-height:1.35">${area.note}</div></div>`, { maxWidth: 260 });
     protectionMarkers.push({ marker, data: area });
   });
 
   legalFishingSpots.forEach((spot) => {
-    const color = spot.difficulty === 'Moderate' ? BRAND : EASY_COLOR;
-    const marker = L.circleMarker([spot.lat, spot.lng], {
-      radius: 9, fillColor: color, color: '#fff', weight: 2.5, fillOpacity: 0.95,
+    const marker = L.marker([spot.lat, spot.lng], {
+      icon: createSpotMarkerIcon(spot.difficulty || 'Easy'),
+      zIndexOffset: 250,
     }).addTo(map);
     const popupHTML = `<div style="min-width:210px;padding:10px"><div style="font-weight:700;font-size:13px">${spot.name}</div><div style="font-size:11px;color:#64748b">${spot.region} • ${spot.difficulty || 'Easy'}</div><div style="font-size:11px;margin-top:6px"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div><div style="margin-top:10px;display:flex;gap:6px"><button onclick="getDirections(${spot.lat},${spot.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;flex:1;background:#fff;cursor:pointer">${t('directions')}</button><button onclick="logCatchFromSpot(${spot.id});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border-radius:999px;flex:1;background:${BRAND};color:#fff;border:none;cursor:pointer">${t('logCatchHere')}</button></div><button onclick="showSpotDetails(${spot.id});event.stopPropagation();" style="margin-top:6px;width:100%;font-size:11px;padding:5px 12px;background:#f1f5f9;border:none;border-radius:999px;cursor:pointer">More Info →</button></div>`;
     marker.bindPopup(popupHTML, { maxWidth: 270 });
@@ -386,8 +422,7 @@ function applyMapFilters() {
     const matchesDiff = !difficultyFilter || spot.difficulty === difficultyFilter;
     const near = isWithinDistance(marker, userLat, userLng, maxDistanceKm);
     const show = matchesSearch && matchesDiff && near;
-    if (show) { marker.addTo(map); marker.setStyle({ fillOpacity: 0.95, opacity: 1 }); }
-    else { marker.setStyle({ fillOpacity: 0.08, opacity: 0.15 }); }
+    marker.setOpacity(show ? 1 : 0.12);
   });
 
   protectionMarkers.forEach(({ marker, data: area }) => {

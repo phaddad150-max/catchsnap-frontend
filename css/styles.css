@@ -511,12 +511,13 @@ body {
 }
 
 #map {
-  height: 360px;
+  height: 380px;
   width: 100%;
   border-radius: 0.85rem;
   overflow: hidden;
   border: 1px solid #e8edf3;
   z-index: 0;
+  background: #e8edf3;
 }
 
 .map-legend {
@@ -529,8 +530,9 @@ body {
   margin-top: 0.55rem;
   padding-top: 0.45rem;
 }
-.map-legend span { display: inline-flex; align-items: center; gap: 0.28rem; }
-.map-legend .dot { width: 0.42rem; height: 0.42rem; border-radius: 9999px; }
+.map-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.map-legend .legend-icon { flex-shrink: 0; display: block; }
+.map-legend .legend-icon-protected { width: 15px; height: 15px; }
 
 .map-footer {
   text-align: center;
@@ -812,15 +814,41 @@ body {
 }
 
 /* Leaflet */
+.leaflet-container { font-family: inherit; }
 .leaflet-popup-content-wrapper { border-radius: 12px; padding: 0; box-shadow: 0 4px 16px rgb(0 0 0 / 0.12); }
 .leaflet-popup-content { margin: 0; font-size: 13px; }
+.leaflet-popup-tip { box-shadow: none; }
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 10px rgb(15 23 42 / 0.12) !important;
+  border-radius: 0.65rem !important;
+  overflow: hidden;
+}
+.leaflet-control-zoom a {
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  color: #475569 !important;
+  border-bottom: 1px solid #e8edf3 !important;
+}
+.leaflet-control-zoom a:last-child { border-bottom: none !important; }
+.leaflet-control-zoom a:hover { background: #f8fafc !important; color: var(--brand) !important; }
+.leaflet-control-attribution {
+  font-size: 0.5rem !important;
+  background: rgb(255 255 255 / 0.85) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px 0 0 0;
+}
 
-.protected-x-marker {
-  color: #ef4444;
-  font-weight: 900;
-  font-size: 15px;
-  line-height: 1;
-  text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+.cs-protected-icon,
+.cs-spot-icon,
+.user-location {
+  background: transparent !important;
+  border: none !important;
+}
+.leaflet-marker-icon.cs-protected-icon,
+.leaflet-marker-icon.cs-spot-icon {
+  transition: opacity 0.2s ease;
 }
 
 /* Toast */
