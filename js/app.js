@@ -19,8 +19,44 @@ let difficultyFilter = null;
 let fishData = [];
 let legalFishingSpots = [];
 let protectedAreas = [];
+let discoverPlaces = [];
+let discoverMarkers = [];
+let categoryFilter = null;
+let placesLoaded = false;
 
 const PAGES = ['step-upload', 'step-analyzing', 'step-results', 'step-map', 'step-journal', 'step-legal'];
+
+/** Resize image client-side before upload (max edge 1280px, JPEG ~0.82). */
+function resizeImageFile(file, maxEdge = 1280, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read image'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Invalid image'));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxEdge || height > maxEdge) {
+          if (width >= height) {
+            height = Math.round((height * maxEdge) / width);
+            width = maxEdge;
+          } else {
+            width = Math.round((width * maxEdge) / height);
+            height = maxEdge;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 async function loadJson(path) {
   const res = await fetch(path);
@@ -123,25 +159,42 @@ function renderJournalPage() {
 }
 
 async function runAnalysis(exampleId, customImage) {
-  const body = { exampleId };
+  const body = {};
+  if (exampleId !== undefined && exampleId !== null && !customImage) {
+    body.exampleId = exampleId;
+  }
   if (selectedSpot) {
     body.spotName = selectedSpot.name;
     body.spotRegion = selectedSpot.region;
   }
+  if (userLat != null && userLng != null) {
+    body.lat = userLat;
+    body.lng = userLng;
+  }
   if (customImage) body.customImage = customImage;
 
   try {
-    const { data } = await apiFetch('/analyze', {
+    const res = await fetch(`${API_BASE}/analyze`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    return data;
-  } catch {
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = json.message || `API ${res.status}`;
+      const err = new Error(msg);
+      err.code = json.code;
+      err.status = res.status;
+      throw err;
+    }
+    return json.data;
+  } catch (err) {
+    // Offline demo fallback only for example cards — never fake a real upload ID
+    if (customImage) throw err;
     const fish = exampleId !== undefined
       ? { ...(fishData.find((f) => f.id === exampleId) || fishData[exampleId]) }
-      : { ...fishData[0], species: fishData[0].species + ' (AI)', confidence: 88 };
-    if (customImage) fish.image = customImage;
+      : null;
+    if (!fish) throw err;
     if (selectedSpot) fish.location = `${selectedSpot.name}, ${selectedSpot.region}`;
     return fish;
   }
@@ -167,21 +220,29 @@ function selectExampleFish(index) {
   });
 }
 
-function handleRealUpload(event) {
+async function handleRealUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    hideAllSteps();
-    document.getElementById('step-analyzing').classList.remove('hidden');
-    setNavActive('snap');
-    runAnalysis(undefined, e.target.result).then((fish) => {
-      currentFish = fish;
-      setTimeout(() => showResults(currentFish), 1100);
-    });
-  };
-  reader.readAsDataURL(file);
   event.target.value = '';
+
+  hideAllSteps();
+  document.getElementById('step-analyzing').classList.remove('hidden');
+  setNavActive('snap');
+
+  try {
+    const dataUrl = await resizeImageFile(file);
+    const fish = await runAnalysis(undefined, dataUrl);
+    currentFish = fish;
+    showResults(currentFish);
+  } catch (err) {
+    hideAllSteps();
+    document.getElementById('step-upload').classList.remove('hidden');
+    const msg =
+      err.code === 'VISION_NOT_CONFIGURED'
+        ? t('visionNotConfigured')
+        : err.message || t('identifyFailed');
+    showToast(msg);
+  }
 }
 
 function showResults(fish) {
@@ -190,24 +251,78 @@ function showResults(fish) {
   setNavActive('snap');
 
   const displayName = fishDisplayName(fish);
-  document.getElementById('result-species').innerHTML = `${displayName}<div class="text-sm font-normal text-slate-400 italic mt-0.5">${fish.scientific}</div>`;
-  document.getElementById('result-confidence').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${t('confidence', fish.confidence)}`;
-  document.getElementById('result-location').innerHTML = `<i class="fa-solid fa-location-dot text-brand"></i> ${fish.location}`;
-  document.getElementById('result-length').textContent = fish.length;
-  document.getElementById('result-eco').textContent = `+${fish.ecoScore}`;
-  document.getElementById('result-fish-image').innerHTML = `<img src="${fish.image}" class="w-full h-full object-cover" alt="${displayName}">`;
-  document.getElementById('result-nutrition').innerHTML = (fish.nutrition || [])
-    .map((item) => `<div class="flex gap-2"><i class="fa-solid fa-check text-brand text-xs mt-0.5"></i><span>${item}</span></div>`)
-    .join('');
+  const scientific = fish.scientific || '';
+  document.getElementById('result-species').innerHTML = `${displayName}<div class="text-sm font-normal text-slate-400 italic mt-0.5">${scientific}</div>`;
+
+  const conf = fish.confidence ?? 0;
+  const rejected = fish.rejected === true || fish.verdict === 'rejected_non_fish';
+  const lowConf = !rejected && (conf < 70 || fish.matched === false);
+  document.getElementById('result-confidence').innerHTML = rejected
+    ? `<i class="fa-solid fa-ban"></i> ${t('notAFishCatch')}`
+    : fish.matched === false
+      ? `<i class="fa-solid fa-circle-question"></i> ${t('notIdentified')}`
+      : `<i class="fa-solid fa-check-circle"></i> ${t('confidence', conf)}${lowConf ? ` · ${t('lowConfidence')}` : ''}`;
+
+  document.getElementById('result-location').innerHTML = `<i class="fa-solid fa-location-dot text-brand"></i> ${fish.location || 'Greece'}`;
+  document.getElementById('result-length').textContent = fish.length || '—';
+  document.getElementById('result-eco').textContent = fish.ecoScore != null ? `+${fish.ecoScore}` : '—';
+  document.getElementById('result-fish-image').innerHTML = fish.image
+    ? `<img src="${fish.image}" class="w-full h-full object-cover" alt="${displayName}">`
+    : '';
+
+  const nutrition = fish.nutrition || [];
+  document.getElementById('result-nutrition').innerHTML = nutrition.length
+    ? nutrition.map((item) => `<div class="flex gap-2"><i class="fa-solid fa-check text-brand text-xs mt-0.5"></i><span>${item}</span></div>`).join('')
+    : `<div class="text-slate-400 text-sm">${t('noNutrition')}</div>`;
+
+  const benefits = fish.benefits || [];
+  const benefitsEl = document.getElementById('result-benefits');
+  if (benefitsEl) {
+    benefitsEl.innerHTML = benefits.length
+      ? benefits.map((item) => `<div class="flex gap-2"><i class="fa-solid fa-heart-pulse text-brand text-xs mt-0.5"></i><span>${item}</span></div>`).join('')
+      : '';
+  }
+  document.getElementById('benefits-block')?.classList.toggle('hidden', rejected || !benefits.length);
+
+  const warnEl = document.getElementById('result-warning');
+  if (warnEl) {
+    const showWarn =
+      rejected ||
+      fish.matched === false ||
+      lowConf ||
+      fish.verdict === 'restricted' ||
+      fish.verdict === 'unknown';
+    warnEl.classList.toggle('hidden', !showWarn);
+    warnEl.textContent =
+      fish.verdictMessage ||
+      fish.rejectReason ||
+      (lowConf ? t('verifyBeforeRetain') : '');
+  }
+  if (rejected) {
+    document.getElementById('result-nutrition').innerHTML =
+      `<div class="text-slate-500 text-sm">${t('uploadFishOnly')}</div>`;
+    document.getElementById('result-length').textContent = '—';
+    document.getElementById('result-eco').textContent = '—';
+  }
 
   const legal = checkIfLegal(fish);
   const el = document.getElementById('result-legal-status');
-  el.innerHTML = legal.legal
-    ? `<span class="legal-badge"><i class="fa-solid fa-check"></i>${t('fullyLegal')}</span><div class="text-[10px] text-brand mt-0.5">${t('aboveMin')}</div>`
-    : `<span class="legal-badge below">${t('belowMin')}</span>`;
+  if (rejected) {
+    el.innerHTML = `<span class="legal-badge below">${t('notAFishCatch')}</span>`;
+  } else if (fish.matched === false || fish.verdict === 'unknown') {
+    el.innerHTML = `<span class="legal-badge below">${t('unknownLegal')}</span>`;
+  } else if (fish.verdict === 'restricted' || fish.legalStatus === 'Restricted') {
+    el.innerHTML = `<span class="legal-badge below">${t('restricted')}</span>`;
+  } else if (legal.legal) {
+    el.innerHTML = `<span class="legal-badge"><i class="fa-solid fa-check"></i>${t('fullyLegal')}</span><div class="text-[10px] text-brand mt-0.5">${t('aboveMin')}</div>`;
+  } else {
+    el.innerHTML = `<span class="legal-badge below">${t('belowMin')}</span>`;
+  }
 }
 
 function checkIfLegal(fish) {
+  if (fish.legal === false) return { legal: false };
+  if (fish.legal === true && fish.verdict !== 'illegal_size') return { legal: true };
   const isWeight = fish.isWeight || /octopus|kg/i.test(fish.length || '');
   if (isWeight) return { legal: fish.lengthValue >= fish.minLegalLength };
   return { legal: fish.lengthValue >= fish.minLegalLength };
@@ -215,6 +330,10 @@ function checkIfLegal(fish) {
 
 function addToJournal() {
   if (!currentFish) return;
+  if (currentFish.rejected || currentFish.verdict === 'rejected_non_fish' || currentFish.matched === false) {
+    showToast(t('cannotJournalRejected'));
+    return;
+  }
   const entry = {
     id: Date.now(),
     date: new Date().toISOString(),
@@ -334,7 +453,7 @@ function setDifficultyFilter(level) {
 
 function updateMapStatPills() {
   document.getElementById('protected-count').textContent = protectionMarkers.length;
-  document.getElementById('legal-count').textContent = legalMarkers.length;
+  document.getElementById('legal-count').textContent = legalMarkers.length + discoverMarkers.length;
 }
 
 const SPOT_MARKER_COLORS = {
@@ -387,6 +506,20 @@ function initMap() {
   loadMapData();
 }
 
+function createDiscoverMarkerIcon() {
+  const html = `
+    <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="15" cy="15" r="15" fill="#e0e7ff" opacity="0.7"/>
+      <circle cx="15" cy="15" r="10" fill="#6366f1" stroke="white" stroke-width="2"/>
+    </svg>`;
+  return L.divIcon({
+    html,
+    className: 'cs-discover-icon',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+  });
+}
+
 function loadMapData() {
   legalMarkers = [];
   protectionMarkers = [];
@@ -396,7 +529,8 @@ function loadMapData() {
       icon: createProtectedMarkerIcon(),
       zIndexOffset: 100,
     }).addTo(map);
-    marker.bindPopup(`<div style="min-width:190px;padding:10px"><div style="font-weight:700;color:#ef4444;font-size:13px">${area.name}</div><div style="font-size:11px;color:#64748b;margin-top:2px">${area.region}</div><div style="font-size:11px;color:#ef4444;margin-top:4px;font-weight:600">${area.protection_level}</div><div style="font-size:11px;color:#475569;margin-top:4px;line-height:1.35">${area.note}</div></div>`, { maxWidth: 260 });
+    const note = area.note || area.fishing_allowed_note || '';
+    marker.bindPopup(`<div style="min-width:190px;padding:10px"><div style="font-weight:700;color:#ef4444;font-size:13px">${area.name}</div><div style="font-size:11px;color:#64748b;margin-top:2px">${area.region || ''}</div><div style="font-size:11px;color:#ef4444;margin-top:4px;font-weight:600">${area.protection_level || ''}</div><div style="font-size:11px;color:#475569;margin-top:4px;line-height:1.35">${note}</div></div>`, { maxWidth: 260 });
     protectionMarkers.push({ marker, data: area });
   });
 
@@ -405,12 +539,63 @@ function loadMapData() {
       icon: createSpotMarkerIcon(spot.difficulty || 'Easy'),
       zIndexOffset: 250,
     }).addTo(map);
-    const popupHTML = `<div style="min-width:210px;padding:10px"><div style="font-weight:700;font-size:13px">${spot.name}</div><div style="font-size:11px;color:#64748b">${spot.region} • ${spot.difficulty || 'Easy'}</div><div style="font-size:11px;margin-top:6px"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div><div style="margin-top:10px;display:flex;gap:6px"><button onclick="getDirections(${spot.lat},${spot.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;flex:1;background:#fff;cursor:pointer">${t('directions')}</button><button onclick="logCatchFromSpot(${spot.id});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border-radius:999px;flex:1;background:${BRAND};color:#fff;border:none;cursor:pointer">${t('logCatchHere')}</button></div><button onclick="showSpotDetails(${spot.id});event.stopPropagation();" style="margin-top:6px;width:100%;font-size:11px;padding:5px 12px;background:#f1f5f9;border:none;border-radius:999px;cursor:pointer">More Info →</button></div>`;
+    const cat = spot.category ? ` · ${spot.category}` : '';
+    const popupHTML = `<div style="min-width:210px;padding:10px"><div style="font-weight:700;font-size:13px">${spot.name}</div><div style="font-size:11px;color:#64748b">${spot.region} • ${spot.difficulty || 'Easy'}${cat}</div><div style="font-size:11px;margin-top:6px"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div><div style="margin-top:10px;display:flex;gap:6px"><button onclick="getDirections(${spot.lat},${spot.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;flex:1;background:#fff;cursor:pointer">${t('directions')}</button><button onclick="logCatchFromSpot(${spot.id});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border-radius:999px;flex:1;background:${BRAND};color:#fff;border:none;cursor:pointer">${t('logCatchHere')}</button></div><button onclick="showSpotDetails(${spot.id});event.stopPropagation();" style="margin-top:6px;width:100%;font-size:11px;padding:5px 12px;background:#f1f5f9;border:none;border-radius:999px;cursor:pointer">More Info →</button></div>`;
     marker.bindPopup(popupHTML, { maxWidth: 270 });
     legalMarkers.push({ marker, data: spot });
   });
 
   updateMapStatPills();
+  loadDiscoverPlaces();
+}
+
+async function loadDiscoverPlaces() {
+  if (!map) return;
+  const center = map.getCenter();
+  const lat = userLat ?? center.lat;
+  const lng = userLng ?? center.lng;
+  const params = new URLSearchParams({
+    lat: String(lat),
+    lng: String(lng),
+    radiusKm: String(maxDistanceKm),
+  });
+  if (categoryFilter) params.set('category', categoryFilter);
+
+  try {
+    const json = await apiFetch(`/places?${params}`);
+    discoverPlaces = (json.data || []).filter((p) => p.source === 'osm');
+    renderDiscoverMarkers();
+    placesLoaded = true;
+  } catch {
+    discoverPlaces = [];
+    renderDiscoverMarkers();
+  }
+}
+
+function renderDiscoverMarkers() {
+  discoverMarkers.forEach(({ marker }) => map.removeLayer(marker));
+  discoverMarkers = [];
+
+  discoverPlaces.forEach((place) => {
+    const marker = L.marker([place.lat, place.lng], {
+      icon: createDiscoverMarkerIcon(),
+      zIndexOffset: 150,
+    }).addTo(map);
+    const popupHTML = `<div style="min-width:200px;padding:10px"><div style="font-weight:700;font-size:13px">${place.name}</div><div style="font-size:11px;color:#64748b">${place.category || 'spot'} · OSM</div><div style="font-size:11px;color:#6366f1;margin-top:6px;font-weight:600">${t('osmDisclaimer')}</div><div style="margin-top:10px"><button onclick="getDirections(${place.lat},${place.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;background:#fff;cursor:pointer;width:100%">${t('directions')}</button></div></div>`;
+    marker.bindPopup(popupHTML, { maxWidth: 260 });
+    discoverMarkers.push({ marker, data: place });
+  });
+  updateMapStatPills();
+  applyMapFilters();
+}
+
+function setCategoryFilter(cat) {
+  categoryFilter = categoryFilter === cat ? null : cat;
+  document.querySelectorAll('[data-category]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.category === (categoryFilter || 'all'));
+  });
+  applyMapFilters();
+  loadDiscoverPlaces();
 }
 
 function applyMapFilters() {
@@ -420,9 +605,18 @@ function applyMapFilters() {
   legalMarkers.forEach(({ marker, data: spot }) => {
     const matchesSearch = !searchTerm || spot.name.toLowerCase().includes(searchTerm) || spot.region.toLowerCase().includes(searchTerm);
     const matchesDiff = !difficultyFilter || spot.difficulty === difficultyFilter;
+    const matchesCat = !categoryFilter || spot.category === categoryFilter;
     const near = isWithinDistance(marker, userLat, userLng, maxDistanceKm);
-    const show = matchesSearch && matchesDiff && near;
+    const show = matchesSearch && matchesDiff && matchesCat && near;
     marker.setOpacity(show ? 1 : 0.12);
+  });
+
+  discoverMarkers.forEach(({ marker, data: place }) => {
+    const matchesSearch = !searchTerm || place.name.toLowerCase().includes(searchTerm);
+    const matchesCat = !categoryFilter || place.category === categoryFilter;
+    const near = isWithinDistance(marker, userLat, userLng, maxDistanceKm);
+    const show = !legalOnly && matchesSearch && matchesCat && near;
+    marker.setOpacity(show ? 1 : 0.08);
   });
 
   protectionMarkers.forEach(({ marker, data: area }) => {
@@ -453,7 +647,10 @@ function goToMyLocation() {
       }),
     }).addTo(map);
     map.flyTo([userLat, userLng], 10, { duration: 1.2 });
-    setTimeout(applyMapFilters, 1300);
+    setTimeout(() => {
+      applyMapFilters();
+      loadDiscoverPlaces();
+    }, 1300);
   }, () => alert(t('geolocationError')));
 }
 
@@ -467,21 +664,38 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
 let currentModalSpot = null;
 
-function showSpotDetails(spotId) {
+async function showSpotDetails(spotId) {
   const spot = legalFishingSpots.find((s) => s.id === spotId);
   if (!spot) return;
   currentModalSpot = spot;
   map?.closePopup();
   document.getElementById('spot-modal-name').textContent = spot.name;
-  document.getElementById('spot-modal-region').textContent = `${spot.region} • ${spot.difficulty || 'Easy'}`;
+  const catLabel = spot.category ? ` · ${spot.category}` : '';
+  document.getElementById('spot-modal-region').textContent = `${spot.region} • ${spot.difficulty || 'Easy'}${catLabel}`;
   document.getElementById('spot-modal-content').innerHTML = `
     <div class="space-y-3 text-sm text-slate-600">
       <div><div class="section-header mb-1">Access</div>${spot.access}</div>
       <div><div class="section-header mb-1">Allowed</div><div class="flex flex-wrap gap-1">${(spot.allowed_gear || []).map((g) => `<span class="px-2 py-0.5 bg-brand-light text-brand-dark rounded-full text-[11px] font-semibold">${g}</span>`).join('')}</div></div>
       <div class="text-xs"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div>
+      <div id="spot-marine-conditions" class="text-xs text-slate-500">${t('loadingMarine')}</div>
       ${spot.warnings ? `<div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">${spot.warnings}</div>` : ''}
     </div>`;
   document.getElementById('spot-details-modal').classList.remove('hidden');
+
+  try {
+    const marine = await apiFetch(`/marine?lat=${spot.lat}&lng=${spot.lng}`);
+    const c = marine.current || {};
+    const el = document.getElementById('spot-marine-conditions');
+    if (el) {
+      el.innerHTML = `<div class="section-header mb-1">${t('marineConditions')}</div>
+        <div>${t('seaTemp')}: <strong>${c.seaTempC != null ? `${c.seaTempC}°C` : '—'}</strong>
+        · ${t('waveHeight')}: <strong>${c.waveHeightM != null ? `${c.waveHeightM} m` : '—'}</strong></div>
+        <div class="text-[10px] text-slate-400 mt-0.5">${marine.source || 'Open-Meteo'}</div>`;
+    }
+  } catch {
+    const el = document.getElementById('spot-marine-conditions');
+    if (el) el.textContent = t('marineUnavailable');
+  }
 }
 
 function hideSpotDetailsModal() {
@@ -550,6 +764,13 @@ function setupEventListeners() {
   document.getElementById('filter-moderate')?.addEventListener('click', () => setDifficultyFilter('Moderate'));
   document.getElementById('legal-only-toggle')?.addEventListener('change', (e) => setMapFilter(e.target.checked ? 'legal' : 'all'));
   document.getElementById('btn-near-me')?.addEventListener('click', goToMyLocation);
+
+  document.querySelectorAll('[data-category]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.category;
+      setCategoryFilter(cat === 'all' ? null : cat);
+    });
+  });
 
   document.getElementById('compliance-close')?.addEventListener('click', hideComplianceModal);
   document.getElementById('btn-national-report')?.addEventListener('click', openOfficialPortal);

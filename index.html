@@ -94,9 +94,14 @@
               <div id="result-legal-status" class="mt-1"></div>
             </div>
           </div>
+          <div id="result-warning" class="result-warning hidden mb-3"></div>
           <div class="mb-4">
             <div class="section-header mb-2" data-i18n="nutrition">Θρεπτικά Οφέλη</div>
             <div id="result-nutrition" class="nutrition-list"></div>
+          </div>
+          <div id="benefits-block" class="mb-4">
+            <div class="section-header mb-2" data-i18n="keyBenefits">Βασικά Οφέλη</div>
+            <div id="result-benefits" class="nutrition-list"></div>
           </div>
           <div class="mb-5">
             <div class="section-header mb-2" data-i18n="sustainability">Βιωσιμότητα &amp; Επίδραση</div>
@@ -127,12 +132,14 @@
           </div>
         </div>
 
-        <p class="section-header mb-2" data-i18n="fishingType">Τύπος Αλιείας</p>
-        <div class="fishing-type-row">
-          <button type="button" class="type-btn active" data-type="all"><i class="fa-solid fa-fish"></i> <span data-i18n="ftAll">Όλοι</span></button>
-          <button type="button" class="type-btn type-shore" data-type="shore"><i class="fa-solid fa-water text-red-500"></i> <span data-i18n="ftShore">Ακτή</span></button>
-          <button type="button" class="type-btn disabled" disabled><span data-i18n="ftBoat">Σκάφος</span></button>
-          <button type="button" class="type-btn disabled" disabled><span data-i18n="ftSpear">Ψαροτούφεκο</span></button>
+        <p class="section-header mb-2" data-i18n="spotCategory">Κατηγορία θέσης</p>
+        <div class="fishing-type-row category-row">
+          <button type="button" class="type-btn active" data-category="all"><i class="fa-solid fa-fish"></i> <span data-i18n="ftAll">Όλοι</span></button>
+          <button type="button" class="type-btn" data-category="pier"><i class="fa-solid fa-bridge"></i> <span data-i18n="catPier">Προβλήτα</span></button>
+          <button type="button" class="type-btn" data-category="harbour"><i class="fa-solid fa-anchor"></i> <span data-i18n="catHarbour">Λιμάνι</span></button>
+          <button type="button" class="type-btn" data-category="marina"><i class="fa-solid fa-ship"></i> <span data-i18n="catMarina">Μαρίνα</span></button>
+          <button type="button" class="type-btn" data-category="rocky_shore"><i class="fa-solid fa-mountain"></i> <span data-i18n="catRocky">Βράχια</span></button>
+          <button type="button" class="type-btn" data-category="beach"><i class="fa-solid fa-umbrella-beach"></i> <span data-i18n="catBeach">Παραλία</span></button>
         </div>
 
         <div class="map-card">
@@ -160,11 +167,15 @@
               <span data-i18n="moderateSpot">Μέτρια θέση</span>
             </span>
             <span>
+              <svg class="legend-icon" width="14" height="14" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="15" fill="#e0e7ff" opacity="0.7"/><circle cx="15" cy="15" r="10" fill="#6366f1" stroke="white" stroke-width="2"/></svg>
+              <span data-i18n="osmSpot">OSM / Discover</span>
+            </span>
+            <span>
               <svg class="legend-icon legend-icon-protected" width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#fecaca" opacity="0.5"/><circle cx="16" cy="16" r="11" fill="#ef4444" stroke="white" stroke-width="2"/><path d="M12 12 L20 20 M20 12 L12 20" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
               <span data-i18n="protectedLegend">Προστατευμένη</span>
             </span>
           </div>
-          <p class="map-footer" data-i18n="mapFooter">Leaflet | © CARTO · Δεδομένα: ProtectedSeas Navigator Ελλάδα</p>
+          <p class="map-footer" data-i18n="mapFooter">Leaflet | © CARTO · OSM Overpass · Open-Meteo · CatchSnap verified spots</p>
         </div>
       </section>
 

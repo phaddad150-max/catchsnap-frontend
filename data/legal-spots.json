@@ -5,18 +5,10 @@
     "lat": 37.942,
     "lng": 23.685,
     "region": "Attica",
+    "category": "pier",
     "access": "Easy - 5 min walk from free public parking",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging",
-      "Handline"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns",
-      "Traps"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging", "Handline"],
+    "prohibited_gear": ["Nets", "Spearguns", "Traps"],
     "daily_limit_kg": 5,
     "best_time": "Early morning & dusk",
     "fishing_type": "Shore casting & jigging",
@@ -29,17 +21,10 @@
     "lat": 37.812,
     "lng": 23.775,
     "region": "Attica",
+    "category": "rocky_shore",
     "access": "Moderate - 10 min walk from parking area",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns",
-      "Bottom trawling"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns", "Bottom trawling"],
     "daily_limit_kg": 5,
     "best_time": "Dawn and late afternoon",
     "fishing_type": "Rock fishing & spinning",
@@ -52,17 +37,10 @@
     "lat": 37.865,
     "lng": 23.753,
     "region": "Attica",
+    "category": "promenade",
     "access": "Very easy - directly from promenade",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging",
-      "Handline"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging", "Handline"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Evening and night",
     "fishing_type": "Urban shore fishing",
@@ -75,16 +53,10 @@
     "lat": 37.568,
     "lng": 22.796,
     "region": "Argolis",
+    "category": "harbour",
     "access": "Easy - parking within 200m",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Sunrise and sunset",
     "fishing_type": "Harbor jigging & casting",
@@ -97,18 +69,10 @@
     "lat": 37.038,
     "lng": 22.113,
     "region": "Messenia",
+    "category": "beach",
     "access": "Easy - multiple access points along promenade",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging",
-      "Handline"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns",
-      "Traps"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging", "Handline"],
+    "prohibited_gear": ["Nets", "Spearguns", "Traps"],
     "daily_limit_kg": 5,
     "best_time": "Early morning",
     "fishing_type": "Beach and promenade fishing",
@@ -121,16 +85,10 @@
     "lat": 37.746,
     "lng": 23.427,
     "region": "Aegina",
+    "category": "marina",
     "access": "Very easy - right in town center",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Dawn and dusk",
     "fishing_type": "Pier and marina casting",
@@ -143,16 +101,10 @@
     "lat": 37.124,
     "lng": 25.236,
     "region": "Cyclades",
+    "category": "harbour",
     "access": "Easy - limited parking 5 min away",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Early morning",
     "fishing_type": "Harbor and rocky shore",
@@ -165,16 +117,10 @@
     "lat": 35.342,
     "lng": 25.134,
     "region": "Crete",
+    "category": "harbour",
     "access": "Easy - parking available nearby",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Evening",
     "fishing_type": "Old port shore fishing",
@@ -187,17 +133,10 @@
     "lat": 35.516,
     "lng": 24.018,
     "region": "Crete",
+    "category": "harbour",
     "access": "Very easy - central location",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging",
-      "Handline"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging", "Handline"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Sunset",
     "fishing_type": "Harbor wall fishing",
@@ -210,16 +149,10 @@
     "lat": 37.935,
     "lng": 23.683,
     "region": "Attica",
+    "category": "marina",
     "access": "Easy - parking at marina",
-    "allowed_gear": [
-      "Rod & line",
-      "Spinning",
-      "Jigging"
-    ],
-    "prohibited_gear": [
-      "Nets",
-      "Spearguns"
-    ],
+    "allowed_gear": ["Rod & line", "Spinning", "Jigging"],
+    "prohibited_gear": ["Nets", "Spearguns"],
     "daily_limit_kg": 5,
     "best_time": "Night fishing recommended",
     "fishing_type": "Marina and rocky breakwater",
