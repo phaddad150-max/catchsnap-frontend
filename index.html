@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -252,41 +252,56 @@
 
   <div id="share-modal" class="modal-overlay hidden">
     <div class="modal-backdrop" id="share-backdrop"></div>
-    <div class="modal-sheet">
+    <div class="modal-sheet premium-sheet">
       <div class="modal-handle"></div>
-      <h3 class="font-semibold text-lg text-center mb-4" data-i18n="shareCatch">Κοινοποίησε την Αλιεία</h3>
+      <div class="premium-sheet-icon"><i class="fa-solid fa-share-nodes"></i></div>
+      <h3 class="premium-sheet-title" data-i18n="shareCatch">Κοινοποίησε την Αλιεία</h3>
       <div id="share-preview" class="share-preview"></div>
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" id="share-copy" class="py-3 bg-brand text-white rounded-xl text-sm font-semibold" data-i18n="copyCaption">Αντιγραφή</button>
-        <button type="button" id="share-native" class="py-3 border border-slate-200 rounded-xl text-sm font-semibold" data-i18n="share">Κοινοποίηση...</button>
+      <div class="premium-sheet-actions">
+        <button type="button" id="share-copy" class="spot-btn-primary"><i class="fa-regular fa-copy"></i> <span data-i18n="copyCaption">Αντιγραφή</span></button>
+        <button type="button" id="share-native" class="spot-btn-secondary"><i class="fa-solid fa-arrow-up-from-bracket"></i> <span data-i18n="share">Κοινοποίηση...</span></button>
       </div>
-      <button type="button" id="share-close" class="w-full mt-3 py-2 text-slate-400 text-sm" data-i18n="close">Κλείσιμο</button>
+      <button type="button" id="share-close" class="btn-text" data-i18n="close">Κλείσιμο</button>
     </div>
   </div>
 
   <div id="compliance-modal" class="modal-overlay hidden">
-    <div class="modal-sheet">
-      <div class="flex justify-between items-center mb-4">
-        <div class="font-semibold text-lg" data-i18n="reportingGuidance">Οδηγίες Αναφοράς</div>
-        <button type="button" id="compliance-close" class="text-2xl text-slate-400 px-2">×</button>
+    <div class="modal-backdrop" id="compliance-backdrop"></div>
+    <div class="modal-sheet premium-sheet">
+      <div class="modal-handle"></div>
+      <div class="flex justify-between items-center mb-3">
+        <div class="premium-sheet-title" style="margin:0;text-align:left" data-i18n="reportingGuidance">Οδηγίες Αναφοράς</div>
+        <button type="button" id="compliance-close" class="spot-close-btn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <button type="button" id="btn-national-report" class="btn-primary" data-i18n="openPortal">Άνοιγμα Επίσημης Πύλης</button>
+      <p class="premium-sheet-copy" data-i18n="mandatoryReportingDesc">Από το 2026, οι ερασιτέχνες θαλάσσιοι αλιείς στην Ελλάδα πρέπει να εγγράφονται και να αναφέρουν ορισμένα αλιεύματα μέσω του επίσημου εθνικού ψηφιακού συστήματος.</p>
+      <button type="button" id="btn-national-report" class="spot-btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> <span data-i18n="openPortal">Άνοιγμα Επίσημης Πύλης</span></button>
     </div>
   </div>
 
   <div id="spot-details-modal" class="modal-overlay hidden">
-    <div class="modal-sheet modal-sheet-tall">
-      <div class="flex justify-between items-center mb-3">
-        <div>
-          <div id="spot-modal-name" class="font-semibold text-lg"></div>
-          <div id="spot-modal-region" class="text-xs text-slate-500"></div>
+    <div class="modal-backdrop" id="spot-modal-backdrop"></div>
+    <div class="modal-sheet spot-sheet" role="dialog" aria-modal="true" aria-labelledby="spot-modal-name">
+      <div class="modal-handle"></div>
+      <div class="spot-hero" id="spot-modal-hero">
+        <div class="spot-hero-top">
+          <div class="spot-hero-badges" id="spot-modal-badges"></div>
+          <button type="button" id="spot-modal-close" class="spot-close-btn" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
-        <button type="button" id="spot-modal-close" class="text-2xl text-slate-400 px-2">×</button>
+        <h2 id="spot-modal-name" class="spot-hero-title"></h2>
+        <p id="spot-modal-region" class="spot-hero-sub"></p>
       </div>
-      <div id="spot-modal-content"></div>
-      <div class="mt-5 flex gap-2">
-        <button type="button" id="btn-log-catch-spot" class="flex-1 py-3 bg-brand text-white rounded-xl font-semibold text-sm"><span data-i18n="logCatchHere">Καταγραφή Αλιεύματος</span></button>
-        <button type="button" id="btn-directions-spot" class="flex-1 py-3 border border-slate-200 rounded-xl font-semibold text-sm" data-i18n="directions">Οδηγίες</button>
+      <div id="spot-modal-content" class="spot-body"></div>
+      <div class="spot-actions">
+        <button type="button" id="btn-log-catch-spot" class="spot-btn-primary">
+          <i class="fa-solid fa-camera"></i>
+          <span data-i18n="logCatchHere">Καταγραφή Αλιεύματος</span>
+        </button>
+        <button type="button" id="btn-directions-spot" class="spot-btn-secondary">
+          <i class="fa-solid fa-diamond-turn-right"></i>
+          <span data-i18n="directions">Οδηγίες</span>
+        </button>
       </div>
     </div>
   </div>

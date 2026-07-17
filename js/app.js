@@ -529,8 +529,19 @@ function loadMapData() {
       icon: createProtectedMarkerIcon(),
       zIndexOffset: 100,
     }).addTo(map);
-    const note = area.note || area.fishing_allowed_note || '';
-    marker.bindPopup(`<div style="min-width:190px;padding:10px"><div style="font-weight:700;color:#ef4444;font-size:13px">${area.name}</div><div style="font-size:11px;color:#64748b;margin-top:2px">${area.region || ''}</div><div style="font-size:11px;color:#ef4444;margin-top:4px;font-weight:600">${area.protection_level || ''}</div><div style="font-size:11px;color:#475569;margin-top:4px;line-height:1.35">${note}</div></div>`, { maxWidth: 260 });
+    const note = escapeHtml(area.note || area.fishing_allowed_note || '');
+    const popupHTML = `
+      <div class="cs-popup">
+        <div class="cs-popup-head protected">
+          <div class="cs-popup-kicker">${escapeHtml(t('protectedLegend'))}</div>
+          <div class="cs-popup-title">${escapeHtml(area.name)}</div>
+          <div class="cs-popup-meta">${escapeHtml(area.region || '')}${area.protection_level ? ` · ${escapeHtml(area.protection_level)}` : ''}</div>
+        </div>
+        <div class="cs-popup-body">
+          ${note ? `<p class="cs-popup-note">${note}</p>` : `<p class="cs-popup-note">${escapeHtml(t('protectedHint'))}</p>`}
+        </div>
+      </div>`;
+    marker.bindPopup(popupHTML, { maxWidth: 280, className: 'cs-leaflet-popup' });
     protectionMarkers.push({ marker, data: area });
   });
 
@@ -539,9 +550,24 @@ function loadMapData() {
       icon: createSpotMarkerIcon(spot.difficulty || 'Easy'),
       zIndexOffset: 250,
     }).addTo(map);
-    const cat = spot.category ? ` · ${spot.category}` : '';
-    const popupHTML = `<div style="min-width:210px;padding:10px"><div style="font-weight:700;font-size:13px">${spot.name}</div><div style="font-size:11px;color:#64748b">${spot.region} • ${spot.difficulty || 'Easy'}${cat}</div><div style="font-size:11px;margin-top:6px"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div><div style="margin-top:10px;display:flex;gap:6px"><button onclick="getDirections(${spot.lat},${spot.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;flex:1;background:#fff;cursor:pointer">${t('directions')}</button><button onclick="logCatchFromSpot(${spot.id});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border-radius:999px;flex:1;background:${BRAND};color:#fff;border:none;cursor:pointer">${t('logCatchHere')}</button></div><button onclick="showSpotDetails(${spot.id});event.stopPropagation();" style="margin-top:6px;width:100%;font-size:11px;padding:5px 12px;background:#f1f5f9;border:none;border-radius:999px;cursor:pointer">More Info →</button></div>`;
-    marker.bindPopup(popupHTML, { maxWidth: 270 });
+    const cat = formatCategory(spot.category);
+    const popupHTML = `
+      <div class="cs-popup">
+        <div class="cs-popup-head">
+          <div class="cs-popup-kicker">${escapeHtml(t('verifiedSpot'))}</div>
+          <div class="cs-popup-title">${escapeHtml(spot.name)}</div>
+          <div class="cs-popup-meta">${escapeHtml(spot.region)} · ${escapeHtml(spot.difficulty || 'Easy')}${cat ? ` · ${escapeHtml(cat)}` : ''}</div>
+        </div>
+        <div class="cs-popup-body">
+          <div class="cs-popup-row"><span>${escapeHtml(t('dailyBagLimit'))}</span><strong>${spot.daily_limit_kg} kg</strong></div>
+          <div class="cs-popup-actions">
+            <button type="button" class="cs-popup-btn" onclick="getDirections(${spot.lat},${spot.lng});event.stopPropagation();">${escapeHtml(t('directions'))}</button>
+            <button type="button" class="cs-popup-btn primary" onclick="logCatchFromSpot(${spot.id});event.stopPropagation();">${escapeHtml(t('logCatchHere'))}</button>
+          </div>
+          <button type="button" class="cs-popup-link" onclick="showSpotDetails(${spot.id});event.stopPropagation();">${escapeHtml(t('moreInfo'))} →</button>
+        </div>
+      </div>`;
+    marker.bindPopup(popupHTML, { maxWidth: 290, className: 'cs-leaflet-popup' });
     legalMarkers.push({ marker, data: spot });
   });
 
@@ -581,8 +607,20 @@ function renderDiscoverMarkers() {
       icon: createDiscoverMarkerIcon(),
       zIndexOffset: 150,
     }).addTo(map);
-    const popupHTML = `<div style="min-width:200px;padding:10px"><div style="font-weight:700;font-size:13px">${place.name}</div><div style="font-size:11px;color:#64748b">${place.category || 'spot'} · OSM</div><div style="font-size:11px;color:#6366f1;margin-top:6px;font-weight:600">${t('osmDisclaimer')}</div><div style="margin-top:10px"><button onclick="getDirections(${place.lat},${place.lng});event.stopPropagation();" style="font-size:11px;padding:5px 12px;border:1px solid #e2e8f0;border-radius:999px;background:#fff;cursor:pointer;width:100%">${t('directions')}</button></div></div>`;
-    marker.bindPopup(popupHTML, { maxWidth: 260 });
+    const cat = formatCategory(place.category) || place.category || 'spot';
+    const popupHTML = `
+      <div class="cs-popup">
+        <div class="cs-popup-head discover">
+          <div class="cs-popup-kicker">OpenStreetMap</div>
+          <div class="cs-popup-title">${escapeHtml(place.name)}</div>
+          <div class="cs-popup-meta">${escapeHtml(cat)}</div>
+        </div>
+        <div class="cs-popup-body">
+          <p class="cs-popup-note">${escapeHtml(t('osmDisclaimer'))}</p>
+          <button type="button" class="cs-popup-btn primary full" onclick="getDirections(${place.lat},${place.lng});event.stopPropagation();">${escapeHtml(t('directions'))}</button>
+        </div>
+      </div>`;
+    marker.bindPopup(popupHTML, { maxWidth: 280, className: 'cs-leaflet-popup' });
     discoverMarkers.push({ marker, data: place });
   });
   updateMapStatPills();
@@ -664,43 +702,140 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 
 let currentModalSpot = null;
 
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatCategory(cat) {
+  if (!cat) return '';
+  const map = {
+    pier: t('catPier'),
+    harbour: t('catHarbour'),
+    marina: t('catMarina'),
+    rocky_shore: t('catRocky'),
+    beach: t('catBeach'),
+    promenade: t('catPromenade'),
+    fishing: t('catFishing'),
+  };
+  return map[cat] || cat.replace(/_/g, ' ');
+}
+
+function difficultyLabel(d) {
+  if (d === 'Easy') return t('easyFilter');
+  if (d === 'Moderate') return t('moderateFilter');
+  if (d === 'Hard') return t('hardFilter');
+  return d || t('easyFilter');
+}
+
 async function showSpotDetails(spotId) {
   const spot = legalFishingSpots.find((s) => s.id === spotId);
   if (!spot) return;
   currentModalSpot = spot;
   map?.closePopup();
+
+  const difficulty = spot.difficulty || 'Easy';
+  const cat = formatCategory(spot.category);
   document.getElementById('spot-modal-name').textContent = spot.name;
-  const catLabel = spot.category ? ` · ${spot.category}` : '';
-  document.getElementById('spot-modal-region').textContent = `${spot.region} • ${spot.difficulty || 'Easy'}${catLabel}`;
+  document.getElementById('spot-modal-region').textContent =
+    `${spot.region}${cat ? ` · ${cat}` : ''} · ${spot.fishing_type || t('shoreFishing')}`;
+
+  const badges = document.getElementById('spot-modal-badges');
+  if (badges) {
+    const diffClass = difficulty === 'Easy' ? 'easy' : difficulty === 'Moderate' ? 'moderate' : '';
+    badges.innerHTML = `
+      <span class="spot-chip verified"><i class="fa-solid fa-shield-halved"></i> ${escapeHtml(t('verifiedSpot'))}</span>
+      <span class="spot-chip ${diffClass}"><i class="fa-solid fa-signal"></i> ${escapeHtml(difficultyLabel(difficulty))}</span>
+      ${cat ? `<span class="spot-chip"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(cat)}</span>` : ''}`;
+  }
+
+  const allowed = (spot.allowed_gear || [])
+    .map((g) => `<span class="spot-gear-chip">${escapeHtml(g)}</span>`)
+    .join('');
+  const prohibited = (spot.prohibited_gear || [])
+    .map((g) => `<span class="spot-gear-chip off">${escapeHtml(g)}</span>`)
+    .join('');
+
   document.getElementById('spot-modal-content').innerHTML = `
-    <div class="space-y-3 text-sm text-slate-600">
-      <div><div class="section-header mb-1">Access</div>${spot.access}</div>
-      <div><div class="section-header mb-1">Allowed</div><div class="flex flex-wrap gap-1">${(spot.allowed_gear || []).map((g) => `<span class="px-2 py-0.5 bg-brand-light text-brand-dark rounded-full text-[11px] font-semibold">${g}</span>`).join('')}</div></div>
-      <div class="text-xs"><strong>${t('dailyBagLimit')}:</strong> ${spot.daily_limit_kg} kg</div>
-      <div id="spot-marine-conditions" class="text-xs text-slate-500">${t('loadingMarine')}</div>
-      ${spot.warnings ? `<div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">${spot.warnings}</div>` : ''}
-    </div>`;
+    <div class="spot-stats">
+      <div class="spot-stat">
+        <div class="spot-stat-label">${escapeHtml(t('dailyBagLimit'))}</div>
+        <div class="spot-stat-value">${spot.daily_limit_kg ?? '—'} kg</div>
+      </div>
+      <div class="spot-stat">
+        <div class="spot-stat-label">${escapeHtml(t('bestTime'))}</div>
+        <div class="spot-stat-value small">${escapeHtml(spot.best_time || '—')}</div>
+      </div>
+      <div class="spot-stat">
+        <div class="spot-stat-label">${escapeHtml(t('difficultyLabel'))}</div>
+        <div class="spot-stat-value small">${escapeHtml(difficultyLabel(difficulty))}</div>
+      </div>
+    </div>
+
+    <div class="spot-section">
+      <div class="spot-section-title"><i class="fa-solid fa-person-walking"></i> ${escapeHtml(t('accessLabel'))}</div>
+      <div class="spot-section-text">${escapeHtml(spot.access || '—')}</div>
+    </div>
+
+    <div class="spot-section">
+      <div class="spot-section-title"><i class="fa-solid fa-fish-fins"></i> ${escapeHtml(t('allowedGear'))}</div>
+      <div class="spot-gear">${allowed || `<span class="spot-section-text">—</span>`}</div>
+      ${prohibited ? `<div class="spot-section-title" style="margin-top:0.75rem"><i class="fa-solid fa-ban"></i> ${escapeHtml(t('prohibitedGear'))}</div><div class="spot-gear">${prohibited}</div>` : ''}
+    </div>
+
+    <div class="spot-section" id="spot-marine-conditions">
+      <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
+      <div class="spot-section-text">${escapeHtml(t('loadingMarine'))}</div>
+    </div>
+
+    ${spot.warnings ? `
+      <div class="spot-warning">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div><strong>${escapeHtml(t('spotWarning'))}</strong><br>${escapeHtml(spot.warnings)}</div>
+      </div>` : ''}
+  `;
+
   document.getElementById('spot-details-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
 
   try {
     const marine = await apiFetch(`/marine?lat=${spot.lat}&lng=${spot.lng}`);
     const c = marine.current || {};
     const el = document.getElementById('spot-marine-conditions');
     if (el) {
-      el.innerHTML = `<div class="section-header mb-1">${t('marineConditions')}</div>
-        <div>${t('seaTemp')}: <strong>${c.seaTempC != null ? `${c.seaTempC}°C` : '—'}</strong>
-        · ${t('waveHeight')}: <strong>${c.waveHeightM != null ? `${c.waveHeightM} m` : '—'}</strong></div>
-        <div class="text-[10px] text-slate-400 mt-0.5">${marine.source || 'Open-Meteo'}</div>`;
+      const temp = c.seaTempC != null ? `${c.seaTempC}°C` : '—';
+      const waves = c.waveHeightM != null ? `${c.waveHeightM} m` : '—';
+      el.innerHTML = `
+        <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
+        <div class="spot-marine">
+          <div class="spot-marine-card">
+            <div class="label">${escapeHtml(t('seaTemp'))}</div>
+            <div class="value">${escapeHtml(temp)}</div>
+          </div>
+          <div class="spot-marine-card">
+            <div class="label">${escapeHtml(t('waveHeight'))}</div>
+            <div class="value">${escapeHtml(waves)}</div>
+          </div>
+          <div class="spot-marine-source">${escapeHtml(marine.source || 'Open-Meteo Marine')}</div>
+        </div>`;
     }
   } catch {
     const el = document.getElementById('spot-marine-conditions');
-    if (el) el.textContent = t('marineUnavailable');
+    if (el) {
+      el.innerHTML = `
+        <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
+        <div class="spot-section-text">${escapeHtml(t('marineUnavailable'))}</div>`;
+    }
   }
 }
 
 function hideSpotDetailsModal() {
   document.getElementById('spot-details-modal').classList.add('hidden');
   currentModalSpot = null;
+  document.body.style.overflow = '';
 }
 
 function logCatchFromSpotModal() {
@@ -793,6 +928,8 @@ function setupEventListeners() {
   });
 
   document.getElementById('spot-modal-close')?.addEventListener('click', hideSpotDetailsModal);
+  document.getElementById('spot-modal-backdrop')?.addEventListener('click', hideSpotDetailsModal);
+  document.getElementById('compliance-backdrop')?.addEventListener('click', hideComplianceModal);
   document.getElementById('btn-log-catch-spot')?.addEventListener('click', logCatchFromSpotModal);
   document.getElementById('btn-directions-spot')?.addEventListener('click', getDirectionsFromModal);
   document.getElementById('spot-details-modal')?.addEventListener('click', (e) => {
