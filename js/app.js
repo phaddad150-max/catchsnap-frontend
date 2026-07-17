@@ -752,49 +752,69 @@ async function showSpotDetails(spotId) {
       ${cat ? `<span class="spot-chip"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(cat)}</span>` : ''}`;
   }
 
-  const allowed = (spot.allowed_gear || [])
+  // Keep chips compact — max 4 allowed + 2 prohibited on one screen
+  const allowed = (spot.allowed_gear || []).slice(0, 4)
     .map((g) => `<span class="spot-gear-chip">${escapeHtml(g)}</span>`)
     .join('');
-  const prohibited = (spot.prohibited_gear || [])
+  const prohibited = (spot.prohibited_gear || []).slice(0, 2)
     .map((g) => `<span class="spot-gear-chip off">${escapeHtml(g)}</span>`)
     .join('');
+  const gearHtml = `${allowed}${prohibited}` || '—';
 
   document.getElementById('spot-modal-content').innerHTML = `
-    <div class="spot-stats">
-      <div class="spot-stat">
-        <div class="spot-stat-label">${escapeHtml(t('dailyBagLimit'))}</div>
-        <div class="spot-stat-value">${spot.daily_limit_kg ?? '—'} kg</div>
+    <div class="spot-metrics">
+      <div class="spot-metric">
+        <div class="spot-metric-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+        <div class="spot-metric-copy">
+          <div class="spot-metric-label">${escapeHtml(t('dailyBagLimit'))}</div>
+          <div class="spot-metric-value">${spot.daily_limit_kg ?? '—'} kg</div>
+        </div>
       </div>
-      <div class="spot-stat">
-        <div class="spot-stat-label">${escapeHtml(t('bestTime'))}</div>
-        <div class="spot-stat-value small">${escapeHtml(spot.best_time || '—')}</div>
+      <div class="spot-metric">
+        <div class="spot-metric-icon level"><i class="fa-solid fa-signal"></i></div>
+        <div class="spot-metric-copy">
+          <div class="spot-metric-label">${escapeHtml(t('difficultyLabel'))}</div>
+          <div class="spot-metric-value">${escapeHtml(difficultyLabel(difficulty))}</div>
+        </div>
       </div>
-      <div class="spot-stat">
-        <div class="spot-stat-label">${escapeHtml(t('difficultyLabel'))}</div>
-        <div class="spot-stat-value small">${escapeHtml(difficultyLabel(difficulty))}</div>
+      <div class="spot-metric" id="spot-metric-temp">
+        <div class="spot-metric-icon sea"><i class="fa-solid fa-temperature-half"></i></div>
+        <div class="spot-metric-copy">
+          <div class="spot-metric-label">${escapeHtml(t('seaTemp'))}</div>
+          <div class="spot-metric-value" id="spot-temp-value">…</div>
+        </div>
+      </div>
+      <div class="spot-metric" id="spot-metric-wave">
+        <div class="spot-metric-icon wave"><i class="fa-solid fa-water"></i></div>
+        <div class="spot-metric-copy">
+          <div class="spot-metric-label">${escapeHtml(t('waveHeight'))}</div>
+          <div class="spot-metric-value" id="spot-wave-value">…</div>
+        </div>
       </div>
     </div>
 
-    <div class="spot-section">
-      <div class="spot-section-title"><i class="fa-solid fa-person-walking"></i> ${escapeHtml(t('accessLabel'))}</div>
-      <div class="spot-section-text">${escapeHtml(spot.access || '—')}</div>
-    </div>
-
-    <div class="spot-section">
-      <div class="spot-section-title"><i class="fa-solid fa-fish-fins"></i> ${escapeHtml(t('allowedGear'))}</div>
-      <div class="spot-gear">${allowed || `<span class="spot-section-text">—</span>`}</div>
-      ${prohibited ? `<div class="spot-section-title" style="margin-top:0.75rem"><i class="fa-solid fa-ban"></i> ${escapeHtml(t('prohibitedGear'))}</div><div class="spot-gear">${prohibited}</div>` : ''}
-    </div>
-
-    <div class="spot-section" id="spot-marine-conditions">
-      <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
-      <div class="spot-section-text">${escapeHtml(t('loadingMarine'))}</div>
+    <div class="spot-panel">
+      <div class="spot-row">
+        <i class="fa-regular fa-clock"></i>
+        <div class="spot-row-label">${escapeHtml(t('bestTime'))}</div>
+        <div class="spot-row-value single">${escapeHtml(spot.best_time || '—')}</div>
+      </div>
+      <div class="spot-row">
+        <i class="fa-solid fa-person-walking"></i>
+        <div class="spot-row-label">${escapeHtml(t('accessLabel'))}</div>
+        <div class="spot-row-value">${escapeHtml(spot.access || '—')}</div>
+      </div>
+      <div class="spot-row">
+        <i class="fa-solid fa-fish-fins"></i>
+        <div class="spot-row-label">${escapeHtml(t('allowedGear'))}</div>
+        <div class="spot-row-value"><div class="spot-gear">${gearHtml}</div></div>
+      </div>
     </div>
 
     ${spot.warnings ? `
       <div class="spot-warning">
         <i class="fa-solid fa-triangle-exclamation"></i>
-        <div><strong>${escapeHtml(t('spotWarning'))}</strong><br>${escapeHtml(spot.warnings)}</div>
+        <span><strong>${escapeHtml(t('spotWarning'))}:</strong> ${escapeHtml(spot.warnings)}</span>
       </div>` : ''}
   `;
 
@@ -804,31 +824,15 @@ async function showSpotDetails(spotId) {
   try {
     const marine = await apiFetch(`/marine?lat=${spot.lat}&lng=${spot.lng}`);
     const c = marine.current || {};
-    const el = document.getElementById('spot-marine-conditions');
-    if (el) {
-      const temp = c.seaTempC != null ? `${c.seaTempC}°C` : '—';
-      const waves = c.waveHeightM != null ? `${c.waveHeightM} m` : '—';
-      el.innerHTML = `
-        <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
-        <div class="spot-marine">
-          <div class="spot-marine-card">
-            <div class="label">${escapeHtml(t('seaTemp'))}</div>
-            <div class="value">${escapeHtml(temp)}</div>
-          </div>
-          <div class="spot-marine-card">
-            <div class="label">${escapeHtml(t('waveHeight'))}</div>
-            <div class="value">${escapeHtml(waves)}</div>
-          </div>
-          <div class="spot-marine-source">${escapeHtml(marine.source || 'Open-Meteo Marine')}</div>
-        </div>`;
-    }
+    const tempEl = document.getElementById('spot-temp-value');
+    const waveEl = document.getElementById('spot-wave-value');
+    if (tempEl) tempEl.textContent = c.seaTempC != null ? `${c.seaTempC}°C` : '—';
+    if (waveEl) waveEl.textContent = c.waveHeightM != null ? `${c.waveHeightM} m` : '—';
   } catch {
-    const el = document.getElementById('spot-marine-conditions');
-    if (el) {
-      el.innerHTML = `
-        <div class="spot-section-title"><i class="fa-solid fa-water"></i> ${escapeHtml(t('marineConditions'))}</div>
-        <div class="spot-section-text">${escapeHtml(t('marineUnavailable'))}</div>`;
-    }
+    const tempEl = document.getElementById('spot-temp-value');
+    const waveEl = document.getElementById('spot-wave-value');
+    if (tempEl) tempEl.textContent = '—';
+    if (waveEl) waveEl.textContent = '—';
   }
 }
 
