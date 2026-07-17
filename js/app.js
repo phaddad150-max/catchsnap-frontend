@@ -1,7 +1,7 @@
 const API_BASE = window.CATCHSNAP_API || 'http://localhost:3001/api/v1';
-const BRAND = '#3779EC';
-const BRAND_DARK = '#2856C7';
-const EASY_COLOR = '#22c55e';
+const BRAND = '#2F6FEA';
+const BRAND_DARK = '#1E4FBE';
+const EASY_COLOR = '#10B981';
 
 let currentFish = null;
 let selectedSpot = null;
@@ -141,10 +141,10 @@ function renderJournalPage() {
         <div class="journal-thumb"><img src="${entry.image}" alt="${name}"></div>
         <div class="flex-1 min-w-0 pr-6">
           <div class="species-name">${name}</div>
-          <div class="journal-meta"><i class="fa-regular fa-calendar"></i>${date}</div>
-          <div class="journal-meta"><i class="fa-solid fa-location-dot"></i>${entry.location || 'Greece'}</div>
+          <div class="journal-meta"><i class="fa-regular fa-calendar-days"></i>${escapeHtml(date)}</div>
+          <div class="journal-meta"><i class="fa-solid fa-map-pin"></i>${escapeHtml(entry.location || 'Greece')}</div>
           <span class="legal-badge ${isLegal ? '' : 'below'}">
-            <i class="fa-solid fa-check"></i>${isLegal ? t('legalBadge') : t('belowMinLabel')}
+            <i class="fa-solid ${isLegal ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i>${isLegal ? t('legalBadge') : t('belowMinLabel')}
           </span>
         </div>
         <button type="button" class="journal-delete" data-delete-id="${entry.id}" aria-label="Delete">
@@ -252,7 +252,7 @@ function showResults(fish) {
 
   const displayName = fishDisplayName(fish);
   const scientific = fish.scientific || '';
-  document.getElementById('result-species').innerHTML = `${displayName}<div class="text-sm font-normal text-slate-400 italic mt-0.5">${scientific}</div>`;
+  document.getElementById('result-species').innerHTML = `${escapeHtml(displayName)}<div class="result-scientific">${escapeHtml(scientific)}</div>`;
 
   const conf = fish.confidence ?? 0;
   const rejected = fish.rejected === true || fish.verdict === 'rejected_non_fish';
@@ -261,25 +261,25 @@ function showResults(fish) {
     ? `<i class="fa-solid fa-ban"></i> ${t('notAFishCatch')}`
     : fish.matched === false
       ? `<i class="fa-solid fa-circle-question"></i> ${t('notIdentified')}`
-      : `<i class="fa-solid fa-check-circle"></i> ${t('confidence', conf)}${lowConf ? ` · ${t('lowConfidence')}` : ''}`;
+      : `<i class="fa-solid fa-circle-check"></i> ${t('confidence', conf)}${lowConf ? ` · ${t('lowConfidence')}` : ''}`;
 
-  document.getElementById('result-location').innerHTML = `<i class="fa-solid fa-location-dot text-brand"></i> ${fish.location || 'Greece'}`;
+  document.getElementById('result-location').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeHtml(fish.location || 'Greece')}`;
   document.getElementById('result-length').textContent = fish.length || '—';
   document.getElementById('result-eco').textContent = fish.ecoScore != null ? `+${fish.ecoScore}` : '—';
   document.getElementById('result-fish-image').innerHTML = fish.image
-    ? `<img src="${fish.image}" class="w-full h-full object-cover" alt="${displayName}">`
-    : '';
+    ? `<img src="${fish.image}" alt="${escapeHtml(displayName)}">`
+    : '<div class="result-thumb-fallback"><i class="fa-solid fa-fish"></i></div>';
 
   const nutrition = fish.nutrition || [];
   document.getElementById('result-nutrition').innerHTML = nutrition.length
-    ? nutrition.map((item) => `<div class="flex gap-2"><i class="fa-solid fa-check text-brand text-xs mt-0.5"></i><span>${item}</span></div>`).join('')
-    : `<div class="text-slate-400 text-sm">${t('noNutrition')}</div>`;
+    ? nutrition.map((item) => `<div class="info-row"><i class="fa-solid fa-leaf"></i><span>${escapeHtml(item)}</span></div>`).join('')
+    : `<div class="info-row muted"><i class="fa-solid fa-circle-info"></i><span>${t('noNutrition')}</span></div>`;
 
   const benefits = fish.benefits || [];
   const benefitsEl = document.getElementById('result-benefits');
   if (benefitsEl) {
     benefitsEl.innerHTML = benefits.length
-      ? benefits.map((item) => `<div class="flex gap-2"><i class="fa-solid fa-heart-pulse text-brand text-xs mt-0.5"></i><span>${item}</span></div>`).join('')
+      ? benefits.map((item) => `<div class="info-row"><i class="fa-solid fa-heart-pulse"></i><span>${escapeHtml(item)}</span></div>`).join('')
       : '';
   }
   document.getElementById('benefits-block')?.classList.toggle('hidden', rejected || !benefits.length);

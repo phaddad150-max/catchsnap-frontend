@@ -124,6 +124,9 @@ const I18N = {
     hardFilter: 'Hard',
     catPromenade: 'Promenade',
     catFishing: 'Fishing area',
+    featId: 'AI ID',
+    featLegal: 'Legal',
+    featNutrition: 'Nutrition',
   },
   el: {
     appSubtitle: 'Ελλάδα • Νόμιμη Αλιεία',
@@ -250,6 +253,9 @@ const I18N = {
     hardFilter: 'Δύσκολο',
     catPromenade: 'Περίπατος',
     catFishing: 'Αλιευτική ζώνη',
+    featId: 'AI ID',
+    featLegal: 'Νόμιμο',
+    featNutrition: 'Θρέψη',
   },
 };
 
